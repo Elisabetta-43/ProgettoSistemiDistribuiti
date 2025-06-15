@@ -1,0 +1,31 @@
+{
+    "globalState": {
+        "totalUsers": 2,
+        "totalContributions": {
+            "available": 500,
+            "assigned": 200,
+            "spent": 60
+        },
+        "totalVouchers": {
+            "generated": 2,
+            "notConsumed": 1,
+            "consumed": 1
+        }
+    },
+    "userContributions": [
+        {
+           "fiscalCode": "RSSMRA80A01H501U",
+            "total": 500,
+            "available": 300,
+            "assigned": 200,
+            "spent": 60
+        },
+        {
+           "fiscalCode": "RSSMRA80A01H501U",
+            "total": 100,
+            "available": 100,
+            "assigned": 0,
+            "spent": 0
+        }
+    ]
+}
