@@ -1,7 +1,8 @@
 package it.unimib.sd2025;
 
-import java.net.*;
-import java.io.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
  * Classe principale in cui parte il database.
@@ -11,6 +12,11 @@ public class Main {
      * Porta di ascolto.
      */
     public static final int PORT = 3030;
+
+    /**
+     * Istanza del database.
+     */
+    private static Database database;
 
     /**
      * Avvia il database e l'ascolto di nuove connessioni.
@@ -42,24 +48,20 @@ public class Main {
 
         public void run() {
             try {
-                var out = new PrintWriter(client.getOutputStream(), true);
-                var in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                // Creazione dell'istanza del ProtocolHandler
+                ProtocolHandler protocolHandler = new ProtocolHandler(Database.getInstance(), client);
 
-                String inputLine;
+                // Esecuzione del ProtocolHandler per gestire la richiesta
+                protocolHandler.run();
 
-                while ((inputLine = in.readLine()) != null) {
-                    if (".".equals(inputLine)) {
-                        out.println("bye");
-                        break;
-                    }
-                    out.println(inputLine);
-                }
-
-                in.close();
-                out.close();
-                client.close();
             } catch (IOException e) {
-                System.err.println(e);
+                System.err.println("Errore nella gestione della connessione: " + e.getMessage());
+            } finally {
+                try {
+                    client.close(); // Chiude il socket del client
+                } catch (IOException e) {
+                    System.err.println("Errore nella chiusura del socket: " + e.getMessage());
+                }
             }
         }
     }
@@ -72,6 +74,10 @@ public class Main {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
+        database = Database.getInstance();
+        System.out.println("Database initialized.");
+        System.out.println("Starting server...");
+        // Avvio del server
         startServer();
     }
 }
