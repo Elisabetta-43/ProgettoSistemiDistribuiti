@@ -64,8 +64,7 @@ public class Main {
                 // Esecuzione del ProtocolHandler per gestire la richiesta
                 protocolHandler.run();
 
-            } catch (IOException e) {
-                System.err.println("Errore nella gestione della connessione: " + e.getMessage());
+            } catch (IOException ex) {
             } finally {
                 try {
                     client.close(); // Chiude il socket del client

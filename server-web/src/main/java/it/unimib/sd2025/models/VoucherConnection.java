@@ -1,11 +1,11 @@
-package main.java.it.unimib.sd2025.models;
+package it.unimib.sd2025.models;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import it.unimib.sd2025.connection.TCPconnection;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
-import it.unimib.sd2025.connection.TCPconnection;
-import it.unimib.sd2025.models.MessageDB;
 
 public class VoucherConnection {
 
@@ -48,7 +48,7 @@ public class VoucherConnection {
         Query.put("op", "RETRIEVE");
         Query.put("type", type);
         Query.put("parameter", parameter);
-        if (type = "User")
+        if (type.equals("User"))
             Query.put("conditions", "CF,=,"+ ID);
         else
             Query.put("conditions", "Identificatore,=,"+ ID);
@@ -65,7 +65,7 @@ public class VoucherConnection {
         Query.put("op", "UPDATE");
         Query.put("type", type);
         Query.put("parameter", parameter);
-        if (type = "User")
+        if (type.equals("User"))
             Query.put("conditions", "CF,=,"+ ID);
         else
             Query.put("conditions", "Identificatore,=,"+ ID);

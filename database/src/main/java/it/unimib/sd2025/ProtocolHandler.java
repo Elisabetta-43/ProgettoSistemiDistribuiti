@@ -45,20 +45,11 @@ public class ProtocolHandler implements Runnable {
 
                     // Gestione delle operazioni
                     switch (operation.toUpperCase()) {
-                        case "CREATE":
-                            handleCreate(type, id, parameters);
-                            break;
-                        case "RETRIEVE":
-                            handleRetrieve(type, id, parameters, conditions);
-                            break;
-                        case "UPDATE":
-                            handleUpdate(type, id, parameters, conditions);
-                            break;
-                        case "DELETE":
-                            handleDelete(type, id, conditions);
-                            break;
-                        default:
-                            out.println(jsonb.toJson(new MessageDB("400", "Operazione non supportata", null)));
+                        case "CREATE" -> handleCreate(type, id, parameters);
+                        case "RETRIEVE" -> handleRetrieve(type, id, parameters, conditions);
+                        case "UPDATE" -> handleUpdate(type, id, parameters, conditions);
+                        case "DELETE" -> handleDelete(type, id, conditions);
+                        default -> out.println(jsonb.toJson(new MessageDB("400", "Operazione non supportata", null)));
                     }
                 } catch (JsonbException e) {
                     out.println(jsonb.toJson(new MessageDB("500", "Errore durante l'elaborazione della richiesta: " + e.getMessage(), null)));
