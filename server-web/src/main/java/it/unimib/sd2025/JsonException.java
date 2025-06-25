@@ -7,14 +7,13 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 /**
- * Quando viene lanciata un'eccezione in Jersey, sia da parte dello sviluppatore (nei metodi
- * definiti), oppure da Jersey stesso, si possono definire dei mappatori personalizzati da
- * eccezione Java a e risposte HTTP.
+ * When an exception is thrown in Jersey, either by the developer (in the defined methods),
+ * or by Jersey itself, custom mappers can be defined to map Java exceptions to HTTP responses.
  * 
- * JsonParsingException viene chiamata quando c'è un errore di deserializzazione JSON,
- * semplicemente invece di restituire lo stato 500 restituisce 400.
+ * JsonParsingException is invoked when there is a JSON deserialization error; instead of
+ * returning status 500, it simply returns 400.
  * 
- * L'annotazione "@Provider" serve a far registrare la mappatura in automatico in JAX-RS.
+ * The "@Provider" annotation is used to automatically register the mapping in JAX-RS.
  */
 @Provider
 public class JsonException implements ExceptionMapper<JsonbException> {

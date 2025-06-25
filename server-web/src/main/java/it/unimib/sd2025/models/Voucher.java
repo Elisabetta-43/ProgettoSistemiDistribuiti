@@ -1,4 +1,4 @@
-package main.java.it.unimib.sd2025.models;
+package it.unimib.sd2025.models;
 
 public class Voucher { 
     

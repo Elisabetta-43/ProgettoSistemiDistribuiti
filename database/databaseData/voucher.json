@@ -1,0 +1,22 @@
+{
+    "vouchers": [
+        {
+            "id": 1,
+            "fiscalCode": "RSSMRA80A01H501U",
+            "amount": 140,
+            "type": "cinema",
+            "status": "valid",
+            "creationDate": "2023-10-01",
+            "consumptionDate": null
+        },
+        {
+            "id": 2,
+            "fiscalCode": "RSSMRA80A01H501U",
+            "amount": 60,
+            "type": "books",
+            "status": "consumed",
+            "creationDate": "2023-09-15",
+            "consumptionDate": "2023-09-20"
+        }
+    ]
+}

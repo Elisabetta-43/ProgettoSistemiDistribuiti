@@ -1,22 +1,31 @@
 package it.unimib.sd2025;
 
-import java.net.*;
-import java.io.*;
+//import it.unimib.sd2025.models.User;
+//import it.unimib.sd2025.models.Voucher;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
- * Classe principale in cui parte il database.
+ * Main class for the database server. 
+ * It initializes the database and listens for incoming client connections.
+ * Each connection is handled by a separate thread using the ProtocolHandler.
  */
 public class Main {
-    /**
-     * Porta di ascolto.
-     */
+    // Listener port for the database server */
     public static final int PORT = 3030;
 
+    // Database instance 
+    private static Database database;
+    
     /**
-     * Avvia il database e l'ascolto di nuove connessioni.
-     */
+     * Start the database server and listen for client connections.
+     *
+     * @throws IOException if an I/O error occurs when opening the socket.
+     */     
     public static void startServer() throws IOException {
-        var server = new ServerSocket(PORT);
+        ServerSocket server = new ServerSocket(PORT);
 
         System.out.println("Database listening at localhost:" + PORT);
 
@@ -34,32 +43,35 @@ public class Main {
      * Handler di una connessione del client.
      */
     private static class Handler extends Thread {
-        private Socket client;
+        private final Socket client;
 
         public Handler(Socket client) {
             this.client = client;
         }
 
+        @Override
+        /**
+         * Execute the ProtocolHandler to manage the client's request.
+         * This method runs in a separate thread for each client connection.
+         * If an IOException occurs, it prints an error message.
+         * Finally, it ensures that the client socket is closed.
+         */
         public void run() {
             try {
-                var out = new PrintWriter(client.getOutputStream(), true);
-                var in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                // Creation of a ProtocolHandler instance
+                ProtocolHandler protocolHandler = new ProtocolHandler(Database.getInstance(), client);
 
-                String inputLine;
+                // Esecuzione del ProtocolHandler per gestire la richiesta
+                protocolHandler.run();
 
-                while ((inputLine = in.readLine()) != null) {
-                    if (".".equals(inputLine)) {
-                        out.println("bye");
-                        break;
-                    }
-                    out.println(inputLine);
-                }
-
-                in.close();
-                out.close();
-                client.close();
             } catch (IOException e) {
-                System.err.println(e);
+                System.err.println("Errore nella gestione della connessione: " + e.getMessage());
+            } finally {
+                try {
+                    client.close(); // Chiude il socket del client
+                } catch (IOException e) {
+                    System.err.println("Errore nella chiusura del socket: " + e.getMessage());
+                }
             }
         }
     }
@@ -72,6 +84,10 @@ public class Main {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
+        database = Database.getInstance();
+        Database.getInstance(); // Initialize the database
+        System.out.println("Starting server...");
+        // Avvio del server
         startServer();
     }
 }

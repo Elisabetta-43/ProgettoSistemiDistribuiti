@@ -10,7 +10,7 @@ private String email;
 private int NextVoucherID;
 
 public User (String nome, String cognome, String email, String CF) {
-    this.contributo = 500;
+    this.contributo = 500.0;
     this.CF = CF;
     this.nome = nome;
     this.cognome = cognome;
