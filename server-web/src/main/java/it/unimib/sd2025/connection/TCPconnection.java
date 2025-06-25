@@ -11,7 +11,7 @@ public class TCPconnection {
     private static final String HOST = "localhost";
     private static final int PORT = 3030;
 
-    private static MessageDB sendMessage(String Query) {
+    public static MessageDB sendMessage(String Query) {
         try {
             Socket socket = new Socket(HOST, PORT);
             Jsonb jsonb = JsonbBuilder.create();
