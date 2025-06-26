@@ -12,9 +12,6 @@ import java.net.Socket;
 public class Main {
     // Listener port for the database server
     public static final int PORT = 3030;
-
-    // Database instance
-    private static Database database;
     
     /**
      * Starts the database server and listens for client connections.
@@ -82,7 +79,7 @@ public class Main {
      * @throws IOException if an I/O error occurs during server startup.
      */
     public static void main(String[] args) throws IOException {
-        database = Database.getInstance(); // Initialize the database
+        Database.getInstance(); // Initialize the database
         System.out.println("Starting server...");
         startServer(); // Start the server
     }

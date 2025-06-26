@@ -75,7 +75,7 @@ public class ProtocolHandler implements Runnable {
 
         switch (operation.toUpperCase()) {
             case "CREATE" -> handleCreate(type, id, parameters);
-            case "RETRIEVE" -> handleRetrieve(type, id, parameters, query.get("conditions"));
+            case "RETRIEVE" -> handleRetrieve(type, id, query.get("conditions"));
             case "UPDATE" -> handleUpdate(type, id, parameters, query.get("conditions"));
             case "DELETE" -> handleDelete(type, id, query.get("conditions"));
             default -> sendErrorResponse("400", "Unsupported operation");
@@ -120,7 +120,7 @@ public class ProtocolHandler implements Runnable {
         }
     }
 
-    private void handleRetrieve(String type, String id, Map<String, String> parameters, String conditions) {
+    private void handleRetrieve(String type, String id, String conditions) {
         if (id != null) {
             // Retrieve the object from the database with ID equal to id
             Object result = database.retrieve(type + ":" + id); // Adjusted to pass required arguments

@@ -13,12 +13,6 @@
     </properties>
 
     <dependencies>
-        <!-- Dipendenza al modulo server-web ??-->
-        <dependency>
-            <groupId>it.unimib.sd2025</groupId>
-            <artifactId>sd-project-web</artifactId>
-            <version>0.1</version>
-        </dependency>
         <!-- Dipendenza per Jakarta JSON Binding (JSON-B) -->
         <dependency>
             <groupId>jakarta.json.bind</groupId>
