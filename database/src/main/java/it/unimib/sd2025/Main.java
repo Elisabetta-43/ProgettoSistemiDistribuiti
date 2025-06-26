@@ -1,8 +1,5 @@
 package it.unimib.sd2025;
 
-//import it.unimib.sd2025.models.User;
-//import it.unimib.sd2025.models.Voucher;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,14 +10,14 @@ import java.net.Socket;
  * Each connection is handled by a separate thread using the ProtocolHandler.
  */
 public class Main {
-    // Listener port for the database server */
+    // Listener port for the database server
     public static final int PORT = 3030;
 
-    // Database instance 
+    // Database instance
     private static Database database;
     
     /**
-     * Start the database server and listen for client connections.
+     * Starts the database server and listens for client connections.
      *
      * @throws IOException if an I/O error occurs when opening the socket.
      */     
@@ -40,7 +37,8 @@ public class Main {
     }
 
     /**
-     * Handler di una connessione del client.
+     * Handler for a client connection.
+     * This class manages the client connection in a separate thread.
      */
     private static class Handler extends Thread {
         private final Socket client;
@@ -51,43 +49,42 @@ public class Main {
 
         @Override
         /**
-         * Execute the ProtocolHandler to manage the client's request.
+         * Executes the ProtocolHandler to manage the client's request.
          * This method runs in a separate thread for each client connection.
          * If an IOException occurs, it prints an error message.
          * Finally, it ensures that the client socket is closed.
          */
         public void run() {
             try {
-                // Creation of a ProtocolHandler instance
+                // Create a ProtocolHandler instance
                 ProtocolHandler protocolHandler = new ProtocolHandler(Database.getInstance(), client);
 
-                // Esecuzione del ProtocolHandler per gestire la richiesta
+                // Execute the ProtocolHandler to handle the request
                 protocolHandler.run();
 
             } catch (IOException ex) {
+                System.err.println("Error during client handling: " + ex.getMessage());
             } finally {
                 try {
-                    client.close(); // Chiude il socket del client
+                    client.close(); // Close the client socket
                 } catch (IOException e) {
-                    System.err.println("Errore nella chiusura del socket: " + e.getMessage());
+                    System.err.println("Error closing the socket: " + e.getMessage());
                 }
             }
         }
     }
 
     /**
-     * Metodo principale di avvio del database.
+     * Main method to start the database server.
      *
-     * @param args argomenti passati a riga di comando.
+     * @param args command-line arguments.
      *
-     * @throws IOException
+     * @throws IOException if an I/O error occurs during server startup.
      */
     public static void main(String[] args) throws IOException {
-        database = Database.getInstance();
-        Database.getInstance(); // Initialize the database
+        database = Database.getInstance(); // Initialize the database
         System.out.println("Starting server...");
-        // Avvio del server
-        startServer();
+        startServer(); // Start the server
     }
 }
 

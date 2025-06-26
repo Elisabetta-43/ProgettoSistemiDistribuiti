@@ -4,8 +4,9 @@ Lo scheletro espone la struttura che il progetto deve seguire. Al posto di quest
 
 ## Componenti del gruppo
 
+* Francesco Fracchia (915877) <f.fracchia1@campus.unimib.it>
 * Elisabetta Locatelli (914621) <e.locatelli43@campus.unimib.it>
-* ...
+* Matteo Lorenzin (914593) <m.lorenzin2@campus.unimib.it>
 
 ## Compilazione ed esecuzione
 

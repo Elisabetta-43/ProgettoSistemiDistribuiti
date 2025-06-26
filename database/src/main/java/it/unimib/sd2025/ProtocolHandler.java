@@ -13,18 +13,18 @@ import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbException;
 
 public class ProtocolHandler implements Runnable {
-    private final Database database; // Istanza del database
-    private final Socket clientSocket; // Socket del client
-    private final PrintWriter out; // Stream di output per inviare risposte al client
-    private final BufferedReader in; // Stream di input per leggere le richieste dal client
-    private final Jsonb jsonb; // Istanza di JSON-B per la serializzazione/deserializzazione
+    private final Database database; // Database instance
+    private final Socket clientSocket; // Client socket for communication
+    private final PrintWriter out; // Output stream to send responses to the client
+    private final BufferedReader in; // Input stream to read requests from the client
+    private final Jsonb jsonb; // JSON-B instance for serialization/deserialization
 
     public ProtocolHandler(Database database, Socket clientSocket) throws IOException {
         this.database = database;
         this.clientSocket = clientSocket;
         this.out = new PrintWriter(clientSocket.getOutputStream(), true);
         this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        this.jsonb = JsonbBuilder.create(); // Inizializza JSON-B
+        this.jsonb = JsonbBuilder.create(); // Initialize JSON-B
     }
 
     @Override
@@ -33,125 +33,161 @@ public class ProtocolHandler implements Runnable {
             String request;
             while ((request = in.readLine()) != null) {
                 try {
-                    // Deserializzazione della richiesta JSON-B in una mappa
-                    Map<String, Object> query = jsonb.fromJson(request, Map.class);
+                    // Deserialize the JSON request
+                    Map<String, String> query = jsonb.fromJson(request, Map.class);
 
-                    // Estrazione dei parametri principali dalla query
-                    String operation = (String) query.get("op");
-                    String type = (String) query.get("type");
-                    String id = (String) query.get("ID");
-                    Map<String, Object> parameters = (Map<String, Object>) query.get("parameter");
-                    String conditions = (String) query.get("conditions");
-
-                    // Gestione delle operazioni
-                    switch (operation.toUpperCase()) {
-                        case "CREATE" -> handleCreate(type, id, parameters);
-                        case "RETRIEVE" -> handleRetrieve(type, id, parameters, conditions);
-                        case "UPDATE" -> handleUpdate(type, id, parameters, conditions);
-                        case "DELETE" -> handleDelete(type, id, conditions);
-                        default -> out.println(jsonb.toJson(new MessageDB("400", "Operazione non supportata", null)));
+                    // Validate mandatory parameters
+                    if (!validateQuery(query)) {
+                        sendErrorResponse("400", "Missing mandatory parameters in the request");
+                        continue; // Skip processing the request
                     }
+
+                    // Process the request
+                    processRequest(query);
                 } catch (JsonbException e) {
-                    out.println(jsonb.toJson(new MessageDB("500", "Errore durante l'elaborazione della richiesta: " + e.getMessage(), null)));
+                    logError("Error during JSON-B deserialization", e);
+                    sendErrorResponse("500", "Error processing the request: " + e.getMessage());
                 }
             }
         } catch (IOException e) {
-            System.err.println("Errore nella gestione della connessione: " + e.getMessage());
+            logError("Error handling the connection", e);
         } finally {
-            try {
-                in.close();
-                out.close();
-                clientSocket.close();
-            } catch (IOException e) {
-                System.err.println("Errore nella chiusura delle risorse: " + e.getMessage());
-            }
+            closeResources();
         }
     }
 
-    private void handleCreate(String type, String id, Map<String, Object> parameters) {
+    private void processRequest(Map<String, String> query) {
+        String operation = query.get("op");
+        String type = query.get("type");
+        String id = query.get("ID");
+        String parameterJson = query.get("parameter");
+        Map<String, String> parameters = null;
+
+        // Validate specific parameters
+        if (parameterJson != null) {
+            try {
+                parameters = jsonb.fromJson(parameterJson, Map.class);
+            } catch (JsonbException e) {
+                sendErrorResponse("400", "Error deserializing parameters");
+                return;
+            }
+        }
+
+        switch (operation.toUpperCase()) {
+            case "CREATE" -> handleCreate(type, id, parameters);
+            case "RETRIEVE" -> handleRetrieve(type, id, parameters, query.get("conditions"));
+            case "UPDATE" -> handleUpdate(type, id, parameters, query.get("conditions"));
+            case "DELETE" -> handleDelete(type, id, query.get("conditions"));
+            default -> sendErrorResponse("400", "Unsupported operation");
+        }
+    }
+
+    private boolean validateQuery(Map<String, String> query) {
+        // Verify that mandatory parameters are present
+        return query.containsKey("op") && query.containsKey("type");
+    }
+
+    private void logError(String message, Exception e) {
+        System.err.println(message + ": " + e.getMessage());
+    }
+
+    private void sendErrorResponse(String code, String message) {
+        out.println(jsonb.toJson(new MessageDB(code, message, null)));
+    }
+
+    private void closeResources() {
+        try {
+            in.close();
+            out.close();
+            clientSocket.close();
+        } catch (IOException e) {
+            logError("Error closing resources", e);
+        }
+    }
+
+    private void handleCreate(String type, String id, Map<String, String> parameters) {
         if (id != null && parameters != null) {
             // Create a new record in the database
-            jakarta.json.JsonObject jsonParameters = jsonb.fromJson(jsonb.toJson(parameters), jakarta.json.JsonObject.class);
-            boolean created = database.create(type, id, jsonParameters);
+            // Assuming parameters is a map containing the necessary fields for creation
+            boolean created = database.create(type + ":" + id, parameters);
             if (created) {
-                out.println(jsonb.toJson(new MessageDB("201", "Record creato con successo", null)));
+                out.println(jsonb.toJson(new MessageDB("201", "Record created successfully", null)));
             } else {
-                out.println(jsonb.toJson(new MessageDB("400", "Errore durante la creazione del record", null)));
+                out.println(jsonb.toJson(new MessageDB("400", "Error creating the record", null)));
             }
         } else {
-            out.println(jsonb.toJson(new MessageDB("400", "Parametri insufficienti per la creazione", null)));
+            out.println(jsonb.toJson(new MessageDB("400", "Insufficient parameters for creation", null)));
         }
     }
 
-    private void handleRetrieve(String type, String id, Map<String, Object> parameters, String conditions) {
+    private void handleRetrieve(String type, String id, Map<String, String> parameters, String conditions) {
         if (id != null) {
-            // Prelevo dal database l'oggetto con ID uguale a id
-            Object result = database.retrieve(type, id, null, null); // Adjusted to pass required arguments
+            // Retrieve the object from the database with ID equal to id
+            Object result = database.retrieve(type + ":" + id); // Adjusted to pass required arguments
             if (result != null) {
-                out.println(jsonb.toJson(new MessageDB("200", "Record recuperato con successo", result.toString())));
+                out.println(jsonb.toJson(new MessageDB("200", "Record retrieved successfully", result.toString())));
             } else {
-                out.println(jsonb.toJson(new MessageDB("404", "Record non trovato", null)));
+                out.println(jsonb.toJson(new MessageDB("404", "Record not found", null)));
             }
         } else if (conditions != null) {
-            // Ciclo il database e verifico quali elementi rispettano la condizione
-            for (Map.Entry<String, String> entry : database.getAllData().entrySet()) {
-                if (entry.getKey().startsWith(type + ":") && entry.getValue().contains(conditions)) {
-                    out.println(jsonb.toJson(new MessageDB("200", "Record recuperato con successo", entry.getValue())));
+            // Iterate through the database and check which elements meet the condition
+            for (Map.Entry<String, Object> entry : database.getAllData().entrySet()) {
+                if (entry.getKey().startsWith(type + ":") && ((String) entry.getValue()).contains(conditions)) {
+                    out.println(jsonb.toJson(new MessageDB("200", "Record retrieved successfully", (String) entry.getValue())));
                 }
             }
         } else {
-            // Prelevo tutti gli elementi il cui tipo è uguale a quello specificato nella query
-            for (Map.Entry<String, String> entry : database.getAllData().entrySet()) {
+            // Retrieve all elements whose type matches the one specified in the query
+            for (Map.Entry<String, Object> entry : database.getAllData().entrySet()) {
                 if (entry.getKey().startsWith(type + ":")) {
-                    out.println(jsonb.toJson(new MessageDB("200", "Record recuperato con successo", entry.getValue())));
+                    out.println(jsonb.toJson(new MessageDB("200", "Record retrieved successfully", (String) entry.getValue())));
                 }
             }
         }
     }
 
-    private void handleUpdate(String type, String id, Map<String, Object> parameters, String conditions) {
+    private void handleUpdate(String type, String id, Map<String, String> parameters, String conditions) {
         if (id != null) {
-            // Aggiorno l'oggetto con ID uguale a id
-            jakarta.json.JsonObject jsonParameters = jsonb.fromJson(jsonb.toJson(parameters), jakarta.json.JsonObject.class);
-            boolean updated = database.update(type + ":" + id, jsonParameters, null);
+            // Update the object with ID equal to id
+            // Assuming parameters is a map containing the fields to update
+            boolean updated = database.update(type + ":" + id, parameters);
             if (updated) {
-                out.println(jsonb.toJson(new MessageDB("200", "Record aggiornato con successo", null)));
+                out.println(jsonb.toJson(new MessageDB("200", "Record updated successfully", null)));
             } else {
-                out.println(jsonb.toJson(new MessageDB("404", "Record non trovato", null)));
+                out.println(jsonb.toJson(new MessageDB("404", "Record not found", null)));
             }
         } else if (conditions != null) {
-            // Ciclo il database e aggiorno gli elementi che rispettano la condizione
-            for (Map.Entry<String, String> entry : database.getAllData().entrySet()) {
-                if (entry.getKey().startsWith(type + ":") && entry.getValue().contains(conditions)) {
-                    jakarta.json.JsonObject jsonParameters = jsonb.fromJson(jsonb.toJson(parameters), jakarta.json.JsonObject.class);
-                    database.update(entry.getKey(), jsonParameters, null);
-                    out.println(jsonb.toJson(new MessageDB("200", "Record aggiornato con successo", null)));
+            // Iterate through the database and update elements that meet the condition
+            for (Map.Entry<String, Object> entry : database.getAllData().entrySet()) {
+                if (entry.getKey().startsWith(type + ":") && ((String) entry.getValue()).contains(conditions)) {
+                    database.update(entry.getKey(), parameters);
+                    out.println(jsonb.toJson(new MessageDB("200", "Record updated successfully", null)));
                 }
             }
         } else {
-            out.println(jsonb.toJson(new MessageDB("400", "Condizioni non specificate per l'aggiornamento", null)));
+            out.println(jsonb.toJson(new MessageDB("400", "Conditions not specified for update", null)));
         }
     }
 
     private void handleDelete(String type, String id, String conditions) {
         if (id != null) {
-            // Elimino l'oggetto con ID uguale a id
-            boolean deleted = database.delete(type + ":" + id, jakarta.json.Json.createArrayBuilder().build());
+            // Delete the object with ID equal to id
+            boolean deleted = database.delete(type + ":" + id);
             if (deleted) {
-                out.println(jsonb.toJson(new MessageDB("200", "Record eliminato con successo", null)));
+                out.println(jsonb.toJson(new MessageDB("200", "Record deleted successfully", null)));
             } else {
-                out.println(jsonb.toJson(new MessageDB("404", "Record non trovato", null)));
+                out.println(jsonb.toJson(new MessageDB("404", "Record not found", null)));
             }
         } else if (conditions != null) {
-            // Ciclo il database e elimino gli elementi che rispettano la condizione
-            for (Map.Entry<String, String> entry : database.getAllData().entrySet()) {
-                if (entry.getKey().startsWith(type + ":") && entry.getValue().contains(conditions)) {
-                    database.delete(entry.getKey(), jakarta.json.Json.createArrayBuilder().build());
-                    out.println(jsonb.toJson(new MessageDB("200", "Record eliminato con successo", null)));
+            // Iterate through the database and delete elements that meet the condition
+            for (Map.Entry<String, Object> entry : database.getAllData().entrySet()) {
+                if (entry.getKey().startsWith(type + ":") && ((String) entry.getValue()).contains(conditions)) {
+                    database.delete(entry.getKey());
+                    out.println(jsonb.toJson(new MessageDB("200", "Record deleted successfully", null)));
                 }
             }
         } else {
-            out.println(jsonb.toJson(new MessageDB("400", "Condizioni non specificate per l'eliminazione", null)));
+            out.println(jsonb.toJson(new MessageDB("400", "Conditions not specified for deletion", null)));
         }
     }
 }

@@ -1,7 +1,7 @@
 package it.unimib.sd2025;
 
-//import it.unimib.sd2025.models.User;
-//import it.unimib.sd2025.models.Voucher;
+import it.unimib.sd2025.models.User;
+import it.unimib.sd2025.models.Voucher;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,13 +9,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class Database {
-    private final ConcurrentMap<String, Object> dati; // Mappa per memorizzare i dati
+    // Map for storing data in the database
+    private final ConcurrentMap<String, Object> dati; 
     private static Database instance;
 
     private Database() {
         dati = new ConcurrentHashMap<>();
     }
 
+    /*
+    * Singleton pattern to ensure only one instance of Database exists
+    * This method provides a global point of access to the Database instance
+    */
     public static synchronized Database getInstance() {
         if (instance == null) {
             instance = new Database();
@@ -23,46 +28,48 @@ public class Database {
         return instance;
     }
 
-    // Metodo per aggiungere un oggetto al database
+    // Method to create an object in the database
     public boolean create(String key, Object value) {
         if (key == null || value == null) {
-            return false; // Chiave o valore mancanti
+            // Missing key or value
+            return false; 
         }
 
         if (dati.containsKey(key)) {
-            return false; // L'oggetto esiste già
+            // The object already exists
+            return false; 
         }
 
         dati.put(key, value);
         return true;
     }
 
-    // Metodo per recuperare un oggetto dal database
+    // Method to retrieve an object from the database
     public Object retrieve(String key) {
         return dati.get(key);
     }
 
-    // Metodo per aggiornare un oggetto nel database
+    // Method to update an object in the database
     public boolean update(String key, Object value) {
         if (key == null || value == null || !dati.containsKey(key)) {
-            return false; // Chiave o valore mancanti, oppure chiave non esistente
+            return false; // Missing key or value, or key does not exist
         }
 
         dati.put(key, value);
         return true;
     }
 
-    // Metodo per eliminare un oggetto dal database
+    // Method to delete an object from the database
     public boolean delete(String key) {
         if (key == null || !dati.containsKey(key)) {
-            return false; // Chiave mancante o non esistente
+            return false; // Missing or non-existent key
         }
 
         dati.remove(key);
         return true;
     }
 
-    // Metodo per ottenere tutti i dati
+    // Method to retrieve all data
     public Map<String, Object> getAllData() {
         return new HashMap<>(dati);
     }
