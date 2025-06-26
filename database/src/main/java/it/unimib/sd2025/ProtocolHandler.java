@@ -109,7 +109,7 @@ public class ProtocolHandler implements Runnable {
         if (id != null && parameters != null) {
             // Create a new record in the database
             // Assuming parameters is a map containing the necessary fields for creation
-            boolean created = database.create(type + ":" + id, parameters);
+            boolean created = database.create(type + ":" + id, jsonb.toJson(parameters));
             if (created) {
                 out.println(jsonb.toJson(new MessageDB("201", "Record created successfully", null)));
             } else {
@@ -131,14 +131,14 @@ public class ProtocolHandler implements Runnable {
             }
         } else if (conditions != null) {
             // Iterate through the database and check which elements meet the condition
-            for (Map.Entry<String, Object> entry : database.getAllData().entrySet()) {
+            for (Map.Entry<String, String> entry : database.getAllData().entrySet()) {
                 if (entry.getKey().startsWith(type + ":") && ((String) entry.getValue()).contains(conditions)) {
                     out.println(jsonb.toJson(new MessageDB("200", "Record retrieved successfully", (String) entry.getValue())));
                 }
             }
         } else {
             // Retrieve all elements whose type matches the one specified in the query
-            for (Map.Entry<String, Object> entry : database.getAllData().entrySet()) {
+            for (Map.Entry<String, String> entry : database.getAllData().entrySet()) {
                 if (entry.getKey().startsWith(type + ":")) {
                     out.println(jsonb.toJson(new MessageDB("200", "Record retrieved successfully", (String) entry.getValue())));
                 }
@@ -150,7 +150,7 @@ public class ProtocolHandler implements Runnable {
         if (id != null) {
             // Update the object with ID equal to id
             // Assuming parameters is a map containing the fields to update
-            boolean updated = database.update(type + ":" + id, parameters);
+            boolean updated = database.update(type + ":" + id, jsonb.toJson(parameters));
             if (updated) {
                 out.println(jsonb.toJson(new MessageDB("200", "Record updated successfully", null)));
             } else {
@@ -158,9 +158,9 @@ public class ProtocolHandler implements Runnable {
             }
         } else if (conditions != null) {
             // Iterate through the database and update elements that meet the condition
-            for (Map.Entry<String, Object> entry : database.getAllData().entrySet()) {
+            for (Map.Entry<String, String> entry : database.getAllData().entrySet()) {
                 if (entry.getKey().startsWith(type + ":") && ((String) entry.getValue()).contains(conditions)) {
-                    database.update(entry.getKey(), parameters);
+                    database.update(entry.getKey(), jsonb.toJson(parameters));
                     out.println(jsonb.toJson(new MessageDB("200", "Record updated successfully", null)));
                 }
             }
@@ -180,7 +180,7 @@ public class ProtocolHandler implements Runnable {
             }
         } else if (conditions != null) {
             // Iterate through the database and delete elements that meet the condition
-            for (Map.Entry<String, Object> entry : database.getAllData().entrySet()) {
+            for (Map.Entry<String, String> entry : database.getAllData().entrySet()) {
                 if (entry.getKey().startsWith(type + ":") && ((String) entry.getValue()).contains(conditions)) {
                     database.delete(entry.getKey());
                     out.println(jsonb.toJson(new MessageDB("200", "Record deleted successfully", null)));

@@ -13,7 +13,7 @@
     </properties>
 
     <dependencies>
-        <!-- Dipendenza al modulo server-web -->
+        <!-- Dipendenza al modulo server-web ??-->
         <dependency>
             <groupId>it.unimib.sd2025</groupId>
             <artifactId>sd-project-web</artifactId>
