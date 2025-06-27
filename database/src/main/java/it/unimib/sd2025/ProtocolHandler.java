@@ -19,6 +19,13 @@ public class ProtocolHandler implements Runnable {
     private final BufferedReader in; // Input stream to read requests from the client
     private final Jsonb jsonb; // JSON-B instance for serialization/deserialization
 
+    /**
+     * Constructor for ProtocolHandler.
+     *
+     * @param database The database instance to interact with.
+     * @param clientSocket The socket connected to the client.
+     * @throws IOException If an I/O error occurs when creating input/output streams.
+     */
     public ProtocolHandler(Database database, Socket clientSocket) throws IOException {
         this.database = database;
         this.clientSocket = clientSocket;
@@ -28,12 +35,16 @@ public class ProtocolHandler implements Runnable {
     }
 
     @Override
+    /**
+     * The run method that handles the client requests.
+     * It reads requests from the client, processes them, and sends responses.
+     */
     public void run() {
         try {
             String request;
             while ((request = in.readLine()) != null) {
                 try {
-                    // Deserialize the JSON request
+                    // Deserialize the JSON request into a Map.
                     Map<String, String> query = jsonb.fromJson(request, Map.class);
 
                     // Validate mandatory parameters

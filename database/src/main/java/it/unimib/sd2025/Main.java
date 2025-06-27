@@ -74,8 +74,6 @@ public class Main {
     /**
      * Main method to start the database server.
      *
-     * @param args command-line arguments.
-     *
      * @throws IOException if an I/O error occurs during server startup.
      */
     public static void main(String[] args) throws IOException {

@@ -35,7 +35,11 @@ public class Database {
         return instance;
     }
 
-    // Method to load initial data into the database
+    /**
+    * Method to load initial data into the database.
+    * This is done only once when the Database instance is created.
+    * It reads data from JSON files and populates the 'dati' map.
+    */
     private void loadInitialData() {
         Jsonb jsonb = JsonbBuilder.create();
 
