@@ -93,8 +93,13 @@ public class ProtocolHandler implements Runnable {
         }
     }
 
+    /**
+     * Validates the query parameters to ensure mandatory fields are present.
+     *
+     * @param query The query parameters from the client request.
+     * @return true if the query is valid, false otherwise.
+     */
     private boolean validateQuery(Map<String, String> query) {
-        // Verify that mandatory parameters are present
         return query.containsKey("op") && query.containsKey("type");
     }
 
@@ -116,10 +121,16 @@ public class ProtocolHandler implements Runnable {
         }
     }
 
+    /**
+     * Handles the CREATE operation.
+     * Creates a new record in the database with the specified type and ID.
+     *
+     * @param type The type of the record to create.
+     * @param id The ID of the record to create.
+     * @param parameters The parameters for the new record.
+     */
     private void handleCreate(String type, String id, Map<String, String> parameters) {
         if (id != null && parameters != null) {
-            // Create a new record in the database
-            // Assuming parameters is a map containing the necessary fields for creation
             boolean created = database.create(type + ":" + id, jsonb.toJson(parameters));
             if (created) {
                 out.println(jsonb.toJson(new MessageDB("201", "Record created successfully", null)));
@@ -131,10 +142,18 @@ public class ProtocolHandler implements Runnable {
         }
     }
 
+    /**
+     * Handles the RETRIEVE operation.
+     * Retrieves records from the database based on the specified type, ID, or conditions.
+     *
+     * @param type The type of records to retrieve.
+     * @param id The ID of the record to retrieve (optional).
+     * @param conditions Conditions to filter the records (optional).
+     */
     private void handleRetrieve(String type, String id, String conditions) {
         if (id != null) {
-            // Retrieve the object from the database with ID equal to id
-            Object result = database.retrieve(type + ":" + id); // Adjusted to pass required arguments
+            // Retrieve the object with ID equal to id
+            Object result = database.retrieve(type + ":" + id); 
             if (result != null) {
                 out.println(jsonb.toJson(new MessageDB("200", "Record retrieved successfully", result.toString())));
             } else {
@@ -157,10 +176,18 @@ public class ProtocolHandler implements Runnable {
         }
     }
 
+    /**
+     * Handles the UPDATE operation.
+     * Updates records in the database based on the specified type, ID, or conditions.
+     *
+     * @param type The type of records to update.
+     * @param id The ID of the record to update (optional).
+     * @param parameters The parameters to update in the record.
+     * @param conditions Conditions to filter which records to update (optional).
+     */
     private void handleUpdate(String type, String id, Map<String, String> parameters, String conditions) {
         if (id != null) {
             // Update the object with ID equal to id
-            // Assuming parameters is a map containing the fields to update
             boolean updated = database.update(type + ":" + id, jsonb.toJson(parameters));
             if (updated) {
                 out.println(jsonb.toJson(new MessageDB("200", "Record updated successfully", null)));
@@ -180,6 +207,14 @@ public class ProtocolHandler implements Runnable {
         }
     }
 
+    /**
+     * Handles the DELETE operation.
+     * Deletes records from the database based on the specified type, ID, or conditions.
+     *
+     * @param type The type of records to delete.
+     * @param id The ID of the record to delete (optional).
+     * @param conditions Conditions to filter which records to delete (optional).
+     */
     private void handleDelete(String type, String id, String conditions) {
         if (id != null) {
             // Delete the object with ID equal to id

@@ -1,3 +1,95 @@
+# Distributed Systems Project 2024-2025 - TCP
+
+## 1. Overview
+
+- **Type:** Textual protocol  
+- **Port Used:** 3030  
+- **Description:** The TCP protocol is used for communication between the Web Server and the Database. 
+The exchanged messages are in JSON format and represent requests and responses for CRUD operations 
+(Create, Retrieve, Update, Delete) on database data.
+
+---
+
+## 2. Message Structure
+
+### 2.1. Request
+Requests sent from the Web Server to the Database are represented as JSON strings. 
+Each request contains the following fields:
+
+| Field       | Type   | Description                                  | Example Value                           |
+|-------------|--------|----------------------------------------------|-----------------------------------------|
+| `op`        | String | Operation to be performed                    | `"CREATE"`                              |
+|             |        | (`CREATE`, `RETRIEVE`, `UPDATE`, `DELETE`)   |                                         |
+| `type`      | String | Type of record to manage                     | `"User"`                                |
+| `ID`        | String | Record identifier                            | `"RSSMRA80A01H501U"`                    |
+| `parameter` | Object | Parameters for the operation (optional)      | `{"name": "Mario", "surname": "Rossi"}` |
+| `conditions`| String | Conditions to filter records (optional)      | `"status=valid"`                        |
+
+**Example Request:**
+```json
+{
+    "op": "CREATE",
+    "type": "User",
+    "ID": "RSSMRA80A01H501U",
+    "parameter": {
+        "name": "Mario",
+        "surname": "Rossi",
+        "email": "mario.rossi@example.com"
+    }
+}
+```
+
+---
+
+### 2.2. Response
+Responses sent from the database to the web server are represented as JSON strings. 
+Each response contains the following fields:
+
+| Field        | Type   | Description                          | Example Value                        |
+|--------------|--------|--------------------------------------|--------------------------------------|
+| `StatusCode` | String | Status code of the operation         | `"200"`                              |
+| `Message`    | String | Descriptive message of the operation | `"Operation completed successfully"` |
+| `QueryResult`| Object | Query result (optional)              | `{"id": 1, "name": "John Doe"}`      |
+
+**Example Response:**
+```json
+{
+    "StatusCode": "200",
+    "Message": "Operation completed successfully",
+    "QueryResult": {
+        "id": 1,
+        "name": "John Doe"
+    }
+}
+```
+### 2.3 Supported Commands
+| Command  | Parameters                 | Description                          | 
+|----------|----------------------------|--------------------------------------|
+| CREATE   | `type`, `ID`, `parameter`  | Creates a new record in the database | 
+| RETRIEVE | `type`, `ID`, `conditions` | Retrieves a record from the database | 
+| UPDATE   | `type`, `ID`, `parameter`  | Updates a record in the database     |
+| DELETE   | `type`, `ID`, `conditions` | Deletes a record from the database   | 
+
+
+## Example Request "CREATE":
+`{"op": "CREATE", "type": "User", "ID": "RSSMRA80A01H501U", "parameter": {...}}`
+
+## Example Request "RETRIEVE":
+`{"op": "RETRIEVE", "type": "User", "ID": "RSSMRA80A01H501U"}`
+
+## Example Request "UPDATE":
+`{"op": "UPDATE", "type": "User", "ID": "RSSMRA80A01H501U", "parameter": {...}}`
+
+## Example Request "DELETE":
+`{"op": "DELETE", "type": "User", "ID": "RSSMRA80A01H501U"}`
+
+---
+
+### **Conclusion**
+By following this steps the Database will correctly process CRUD operations based on the protocol.
+
+--------------------------------------------------------------------------------------------------
+
 # Progetto Sistemi Distribuiti 2024-2025 - TCP
 
 ## 1. Panoramica
@@ -81,8 +173,6 @@ Ogni risposta contiene i seguenti campi:
 ---
 
 ### **Conclusione**
-Seguendo questi passaggi:
-1. Il database caricherà correttamente i dati iniziali dai file JSON.
-2. La documentazione sarà completa e conforme alle specifiche richieste.
+Seguendo questi passaggi il Database caricherà correttamente i dati iniziali dai file JSON.
 
 ---
