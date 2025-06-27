@@ -49,7 +49,7 @@ public class ProtocolHandler implements Runnable {
 
                     // Validate mandatory parameters
                     if (!validateQuery(query)) {
-                        sendErrorResponse("400", "Missing mandatory parameters in the request");
+                        sendErrorResponse("500", "Missing mandatory parameters in the request");
                         continue; // Skip processing the request
                     }
 
@@ -79,7 +79,7 @@ public class ProtocolHandler implements Runnable {
             try {
                 parameters = jsonb.fromJson(parameterJson, Map.class);
             } catch (JsonbException e) {
-                sendErrorResponse("400", "Error deserializing parameters");
+                sendErrorResponse("500", "Error deserializing parameters");
                 return;
             }
         }
@@ -89,7 +89,7 @@ public class ProtocolHandler implements Runnable {
             case "RETRIEVE" -> handleRetrieve(type, id, query.get("conditions"));
             case "UPDATE" -> handleUpdate(type, id, parameters, query.get("conditions"));
             case "DELETE" -> handleDelete(type, id, query.get("conditions"));
-            default -> sendErrorResponse("400", "Unsupported operation");
+            default -> sendErrorResponse("500", "Unsupported operation");
         }
     }
 
