@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import it.unimib.sd2025.models.User;
-import it.unimib.sd2025.models.Voucher;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 
@@ -46,21 +44,25 @@ public class Database {
         try {
             // Load users
             String usersJson = new String(Files.readAllBytes(Paths.get("user.json")));
-            List<User> users = jsonb.fromJson(usersJson, new ArrayList<User>() {}.getClass().getGenericSuperclass());
-            for (User user : users) {
-                dati.put("User:" + user.getCF(), jsonb.toJson(user));
+            List<Map<String, Object>> users = jsonb.fromJson(usersJson, new ArrayList<Map<String, Object>>() {}.getClass().getGenericSuperclass());
+            for (Map<String, Object> user : users) {
+                // Assuming "CF" is the key for user data
+                String cf = (String) user.get("CF"); 
+                dati.put("User:" + cf, jsonb.toJson(user));
             }
 
             // Load vouchers
             String vouchersJson = new String(Files.readAllBytes(Paths.get("voucher.json")));
-            List<Voucher> vouchers = jsonb.fromJson(vouchersJson, new ArrayList<Voucher>() {}.getClass().getGenericSuperclass());
-            for (Voucher voucher : vouchers) {
-                dati.put("Voucher:" + voucher.getIdentificarore(), jsonb.toJson(voucher));
+            List<Map<String, Object>> vouchers = jsonb.fromJson(vouchersJson, new ArrayList<Map<String, Object>>() {}.getClass().getGenericSuperclass());
+            for (Map<String, Object> voucher : vouchers) {
+                // Assuming "Identificarore" is the key for voucher data
+                String identifier = (String) voucher.get("Identificarore"); 
+                dati.put("Voucher:" + identifier, jsonb.toJson(voucher));
             }
 
-             // Load global state
+            // Load global state
             String globalStateJson = new String(Files.readAllBytes(Paths.get("database.json")));
-            Map<String, String> globalState = jsonb.fromJson(globalStateJson, Map.class);
+            Map<String, Object> globalState = jsonb.fromJson(globalStateJson, Map.class);
             dati.put("GlobalState", jsonb.toJson(globalState));
 
         } catch (IOException e) {
@@ -89,7 +91,7 @@ public class Database {
     }
 
     // Method to retrieve an object from the database
-    public Object retrieve(String key) {
+    public String retrieve(String key) {
         return dati.get(key);
     }
 
@@ -112,4 +114,27 @@ public class Database {
         dati.remove(key);
         return true;
     }
+
+    public boolean verifyCondition(String condition) {
+       if (condition == null || condition.isEmpty()) {
+           // No condition to verify
+           return false;
+       }
+       try {
+           String [] parts = condition.split("=");
+           if (parts.length != 2) {
+               // Invalid condition format
+               return false;
+           }
+            String key = parts[0].trim();
+            String value = parts[1].trim();
+            // Check if the key exists in the database
+            if (!dati.containsKey(key)) {
+            return false; // Condition not met
+           }                
+            return dati.get(key).equals(value); // Match the value
+       } catch (Exception e) {
+            System.err.println("Error verifying condition: " + e.getMessage());
+            return false; // Default to false in case of errors
+       }}
 }

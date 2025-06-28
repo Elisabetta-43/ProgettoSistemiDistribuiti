@@ -49,9 +49,9 @@ public class DBcomunication {
         Query.put("type", type);
         Query.put("parameter", parameter);
         if (type.equals("User"))
-            Query.put("conditions", "CF,=,"+ ID);
+            Query.put("condition", "CF="+ ID);
         else
-            Query.put("conditions", "Identificatore,=,"+ ID);
+            Query.put("condition", "Identificatore="+ ID);
         QueryString = jsonb.toJson(Query);
 
         return TCPconnection.sendMessage(QueryString);  
@@ -66,9 +66,9 @@ public class DBcomunication {
         Query.put("type", type);
         Query.put("parameter", parameter);
         if (type.equals("User"))
-            Query.put("conditions", "CF,=,"+ ID);
+            Query.put("condition", "CF,=,"+ ID);
         else
-            Query.put("conditions", "Identificatore,=,"+ ID);
+            Query.put("condition", "Identificatore="+ ID);
         QueryString = jsonb.toJson(Query);
 
         return TCPconnection.sendMessage(QueryString);  
@@ -82,7 +82,7 @@ public class DBcomunication {
         Query.put("op", "DELETE");
         Query.put("type", "Voucher");
         Query.put("parameter", null);
-        Query.put("conditions", "Identificatore,=,"+ ID);
+        Query.put("condition", "Identificatore="+ ID);
         QueryString = jsonb.toJson(Query);
 
         return TCPconnection.sendMessage(QueryString);  
@@ -96,7 +96,7 @@ public class DBcomunication {
         Query.put("op", "RETRIEVE");
         Query.put("type", "Voucher");
         Query.put("parameter", VoucherParam);
-        Query.put("conditions", "CF_utente,=,"+ CF);
+        Query.put("condition", "CF_utente="+ CF);
         QueryString = jsonb.toJson(Query);
 
         return TCPconnection.sendMessage(QueryString);  
