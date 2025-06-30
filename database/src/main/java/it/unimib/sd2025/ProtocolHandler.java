@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import it.unimib.sd2025.models.MessageDB;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbException;
@@ -109,8 +108,14 @@ public class ProtocolHandler implements Runnable {
         System.err.println(message + ": " + e.getMessage());
     }
 
+    /**
+     * Sends an error response to the client.
+     *
+     * @param code The error code.
+     * @param message The error message.
+     */
     private void sendErrorResponse(String code, String message) {
-        out.println(jsonb.toJson(new MessageDB(code, message, null)));
+        out.println(code + "_" + message + "_°");
     }
 
     private void closeResources() {
@@ -134,12 +139,12 @@ public class ProtocolHandler implements Runnable {
         if (id != null && parameters != null) {
             boolean created = database.create(id, parameters);
             if (created) {
-                out.println(jsonb.toJson(new MessageDB("201", "Record created successfully", null)));
+                out.println("201_Record created successfully_°");
             } else {
-                out.println(jsonb.toJson(new MessageDB("400", "Error creating the record", null)));
+                out.println("400_Error creating the record_°");
             }
         } else {
-            out.println(jsonb.toJson(new MessageDB("400", "Insufficient parameters for creation", null)));
+            out.println("400_Insufficient parameters for creation_°");
         }
     }
 
@@ -155,33 +160,33 @@ public class ProtocolHandler implements Runnable {
             // Retrieve the object with ID equal to id
             String result = database.retrieve(id);
             if (result != null) {
-                out.println(jsonb.toJson(new MessageDB("200", "Record retrieved successfully", result)));
+                out.println("200_Record retrieved successfully_" + result);
             } else {
-                out.println(jsonb.toJson(new MessageDB("404", "Record not found", null)));
+                out.println("404_Record not found_°");
             }
         } else if (conditions != null) {
             // Collect all elements that meet the condition into a list
             List<Object> results = new ArrayList<>();
-            for (Map.Entry<String, Object> entry: database.getAllData().entrySet()) {
+            for (Map.Entry<String, Object> entry : database.getAllData().entrySet()) {
                 if (database.verifyCondition(conditions)) {
                     results.add(entry.getValue());
                 }
             }
             if (!results.isEmpty()) {
-                out.println(jsonb.toJson(new MessageDB("200", "Records retrieved successfully", jsonb.toJson(results))));
+                out.println("200_Records retrieved successfully_" + jsonb.toJson(results));
             } else {
-                out.println(jsonb.toJson(new MessageDB("404", "No records found matching the condition", null)));
+                out.println("404_No records found matching the condition_°");
             }
         } else {
             // Collect all elements whose type matches the one specified in the query into a list
-             List<Object> results = new ArrayList<>();
-            for (Map.Entry<String, Object> entry: database.getAllData().entrySet()) {
-                    results.add(entry.getValue());
+            List<Object> results = new ArrayList<>();
+            for (Map.Entry<String, Object> entry : database.getAllData().entrySet()) {
+                results.add(entry.getValue());
             }
             if (!results.isEmpty()) {
-                out.println(jsonb.toJson(new MessageDB("200", "Records retrieved successfully", jsonb.toJson(results))));
+                out.println("200_Records retrieved successfully_" + jsonb.toJson(results));
             } else {
-                out.println(jsonb.toJson(new MessageDB("404", "No records found matching the condition", null)));
+                out.println("404_No records found matching the condition_°");
             }
         }
     }
@@ -199,20 +204,26 @@ public class ProtocolHandler implements Runnable {
             // Update the object with ID equal to id
             boolean updated = database.update(id, parameters);
             if (updated) {
-                out.println(jsonb.toJson(new MessageDB("200", "Record updated successfully", null)));
+                out.println("200_Record updated successfully_°");
             } else {
-                out.println(jsonb.toJson(new MessageDB("404", "Record not found", null)));
+                out.println("404_Record not found_°");
             }
         } else if (conditions != null) {
             // Iterate through the database and update elements that meet the condition
-            for (Map.Entry<String, Object> entry: database.getAllData().entrySet()) {
+            boolean updated = false;
+            for (Map.Entry<String, Object> entry : database.getAllData().entrySet()) {
                 if (database.verifyCondition(conditions)) {
                     database.update(entry.getKey(), parameters);
-                    out.println(jsonb.toJson(new MessageDB("200", "Record updated successfully", null)));
+                    updated = true;
                 }
             }
+            if (updated) {
+                out.println("200_Record updated successfully_°");
+            } else {
+                out.println("404_No records found matching the condition_°");
+            }
         } else {
-            out.println(jsonb.toJson(new MessageDB("400", "Condition not specified for update", null)));
+            out.println("400_Condition not specified for update_°");
         }
     }
 
@@ -228,20 +239,26 @@ public class ProtocolHandler implements Runnable {
             // Delete the object with ID equal to id
             boolean deleted = database.delete(id);
             if (deleted) {
-                out.println(jsonb.toJson(new MessageDB("200", "Record deleted successfully", null)));
+                out.println("200_Record deleted successfully_°");
             } else {
-                out.println(jsonb.toJson(new MessageDB("404", "Record not found", null)));
+                out.println("404_Record not found_°");
             }
         } else if (conditions != null) {
             // Iterate through the database and delete elements that meet the condition
-            for (Map.Entry<String, Object> entry: database.getAllData().entrySet()) {
+            boolean deleted = false;
+            for (Map.Entry<String, Object> entry : database.getAllData().entrySet()) {
                 if (database.verifyCondition(conditions)) {
                     database.delete(entry.getKey());
-                    out.println(jsonb.toJson(new MessageDB("200", "Record deleted successfully", null)));
+                    deleted = true;
                 }
             }
+            if (deleted) {
+                out.println("200_Record deleted successfully_°");
+            } else {
+                out.println("404_No records found matching the condition_°");
+            }
         } else {
-            out.println(jsonb.toJson(new MessageDB("400", "Condition not specified for deletion", null)));
+            out.println("400_Condition not specified for deletion_°");
         }
     }
 
