@@ -84,15 +84,17 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response GetUserinfo(@PathParam("id") String id) {
-        Map result = new HashMap<String, Double>();
+        Map<String, Double> result = new HashMap<>();
         Jsonb jsonb = JsonbBuilder.create();
         String Query, resultString;
         Double consumedTotal = 0.0, unusedTotal = 0.0, total = 0.0;
         Voucher voucher;
 
+        // Query creation to retrieve vouchers for the user with the given ID
         Query = conn.MakeQuery("RETRIEVE", null, null, null, "userId=" + id);
         MessageDB message = conn.SendQuery(Query);
 
+        // Error handling based on the status code of the response
         if (message.getStatusCode().equals("500")) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
                     .entity(message.getMessage()).build();
@@ -101,22 +103,31 @@ public class UserResource {
         }
 
         try {
+            // Response parsing and voucher processing
             String[] VoucherList = jsonb.fromJson(message.getQueryResult(), String[].class);
             for (String voucherString : VoucherList) {
                 voucher = jsonb.fromJson(voucherString, Voucher.class);
-                if (voucher.getstatus())
-                    unusedTotal = voucher.getamount() + unusedTotal;
-                else
-                    consumedTotal = voucher.getamount() + consumedTotal;
-                total = voucher.getamount() + total;
+                if (voucher.getstatus()) {
+                    unusedTotal += voucher.getamount();
+                } else {
+                    consumedTotal += voucher.getamount();
+                }
+                total += voucher.getamount();
             }
-            result.put("totale buoni", total);
-            result.put("totale buoni non consumati", unusedTotal);
-            result.put("totale buoni consumati", consumedTotal);
+
+            // Populating the result map with the aggregated values
+            result.put("available", total);
+            result.put("assigned", unusedTotal);
+            result.put("spent", consumedTotal);
+
+            // Map serialization to JSON string
             resultString = jsonb.toJson(result);
         } catch (Exception e) {
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity("parsing error").build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .entity("parsing error").build();
         }
+
+        // Returning the response with the JSON string
         return Response.ok(resultString).build();
     }
 
