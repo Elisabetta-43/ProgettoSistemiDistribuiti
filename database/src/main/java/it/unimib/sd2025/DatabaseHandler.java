@@ -13,7 +13,7 @@ import jakarta.json.bind.JsonbBuilder;
 
 public class DatabaseHandler {
     // Map for storing data in the database
-    private final ConcurrentMap<String, String> dati; 
+    private final ConcurrentMap<String, Object> dati;
     private static DatabaseHandler instance;
 
     private DatabaseHandler() {
@@ -59,39 +59,23 @@ public class DatabaseHandler {
                 dati.put("Voucher:" + identifier, jsonb.toJson(voucher));
             }
 
-            // Load global state
-            String globalStateJson = new String(Files.readAllBytes(Paths.get("../database.json")));
-            Map<String, Object> globalState = jsonb.fromJson(globalStateJson, Map.class);
-            dati.put("GlobalState", jsonb.toJson(globalState));
-
         } catch (IOException e) {
             System.err.println("Error loading initial data: " + e.getMessage());
         }
     }
 
-    public Map<String, String> getAllData() {
+    public Map<String, Object> getAllData() {
         return new ConcurrentHashMap<>(dati);
     }
 
     // Method to create an object in the database
-    public boolean create(String key, String value) {
-        if (key == null || value == null) {
-            // Missing key or value
-            return false; 
-        }
-
-        if (dati.containsKey(key)) {
-            // The object already exists
-            return false; 
-        }
-
-        dati.put(key, value);
-        return true;
+    public boolean create(String type, String key, Map<String, Object> parameters) {
+       
     }
 
     // Method to retrieve an object from the database
     public String retrieve(String key) {
-        return dati.get(key);
+        return (String) dati.get(key);
     }
 
     // Method to update an object in the database

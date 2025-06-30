@@ -4,8 +4,8 @@
             "idVoucher": 1,
             "userId": "RSSMRA80A01H501U",
             "amount": 140,
-            "type": "cinema",
-            "status": "valid",
+            "category": "cinema",
+            "status": "true",
             "creationDate": "2023-10-01",
             "expirationDate": null
         },
@@ -14,7 +14,7 @@
             "userId": "RSSMRA80A01H501U",
             "amount": 60,
             "type": "books",
-            "status": "consumed",
+            "status": "false",
             "creationDate": "2023-09-15",
             "expirationDate": "2023-09-20"
         }
