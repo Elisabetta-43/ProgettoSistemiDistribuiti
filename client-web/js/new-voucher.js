@@ -13,9 +13,7 @@ creator.addEventListener("click", async () => {
   const voucher = {
     userId: user,
     amount: amt,
-    category: category,
-    status: "Active",
-    creationDate: new Date().toLocaleDateString("en-CA")
+    category
   };
   try {
     await apiRequest(`/user/${user}/vouchers`, {

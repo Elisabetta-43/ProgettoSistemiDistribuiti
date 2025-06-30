@@ -11,7 +11,7 @@ btn.addEventListener('click', async () => {
   }
 
   try {
-    const user = await apiRequest(`/user/${code}`);
+    const user = await apiRequest(`/user?id=${code}`);
     sessionStorage.setItem("fiscalCode", code);
 
     if (user.admin) {

@@ -3,7 +3,7 @@
   const user = getFiscalCode();
 
   try {
-    const data = await apiRequest("/user/" + user);
+    const data = await apiRequest(`/user?id=${user}`);
 
     if (!data.admin) {
       location.href = "../html/dashboard.html";
