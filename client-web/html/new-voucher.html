@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>New Voucher</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/new-voucher.css">
+    <script src="../js/common.js"></script>
+
+</head>
+
+<body>
+    <div class="frame">
+        <h1>Create New Voucher</h1>
+
+        <div id="message" class="hidden"></div>
+
+        <div class="input-group">
+            <label for="amount">Amount (€)</label>
+            <input id="amount" type="number" min="1" placeholder="Enter amount" required>
+        </div>
+
+        <div class="input-group">
+            <label for="category">Category</label>
+            <select id="category">
+                <option value="cinema">Cinema</option>
+                <option value="music">Music</option>
+                <option value="concerts">Concerts</option>
+                <option value="cultural-events">Cultural Events</option>
+                <option value="books">Books</option>
+                <option value="museums">Museums</option>
+                <option value="instruments">Instruments</option>
+                <option value="theater">Theater & Dance</option>
+            </select>
+        </div>
+
+        <button id="createBtn" class="btn">Create</button>
+        <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+    </div>
+
+    <script src="../js/common.js"></script>
+    <script src="../js/new-voucher.js"></script>
+</body>
+
+</html>

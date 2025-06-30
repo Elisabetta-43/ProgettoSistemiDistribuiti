@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Register</title>
+  <link rel="stylesheet" href="../css/common.css" />
+</head>
+
+<body>
+  <div class="frame">
+    <h1>Create Account</h1>
+
+
+    <div class="input-group">
+      <label for="name">Name</label>
+      <input id="name" required />
+    </div>
+    <div class="input-group">
+      <label for="surname">Surname</label>
+      <input id="surname" required />
+    </div>
+    <div class="input-group">
+      <label for="email">Email</label>
+      <input id="email" type="email" required />
+    </div>
+    <div class="input-group">
+      <label for="fiscalCode">Fiscal Code</label>
+      <input id="fiscalCode" maxlength="16" required />
+    </div>
+
+    <button id="signupBtn" class="btn-main">Register</button>
+    <button onclick="location.href='index.html'" class="btn-main">Back</button>
+    <div id="signUpMsg" class="hidden"></div>
+  </div>
+
+  <script src="../js/common.js"></script>
+  <script src="../js/signup.js"></script>
+</body>
+
+</html>
