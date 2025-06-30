@@ -1,11 +1,15 @@
 package it.unimib.sd2025.connection;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 import it.unimib.sd2025.models.MessageDB;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
-
-import java.io.*;
-import java.net.Socket;
 
 public class TCPconnection {
     private static final String HOST = "localhost";
@@ -23,6 +27,7 @@ public class TCPconnection {
             out.println(Query);
 
             result = in.readLine();
+            socket.close();
             return jsonb.fromJson(result, MessageDB.class);
         } catch (IOException e) {
             return new MessageDB("500", "I/O exception", null);
