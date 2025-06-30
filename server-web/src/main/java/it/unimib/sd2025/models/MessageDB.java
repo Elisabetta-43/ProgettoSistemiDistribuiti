@@ -5,6 +5,12 @@ public class MessageDB {
     private String StatusCode;
     private String Message;
     private String QueryResult;
+    
+    public MessageDB() {
+        this.StatusCode = "";
+        this.Message = "";
+        this.QueryResult = "";
+    }
 
     public MessageDB(String StatusCode, String Message, String QueryResult){
         this.StatusCode = StatusCode;

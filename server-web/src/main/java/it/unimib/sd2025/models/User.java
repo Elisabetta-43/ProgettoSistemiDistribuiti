@@ -10,15 +10,6 @@ private String Email;
 private int NextVoucherID;
 private boolean Admin;
 
-// public User (String name, String surname, String email, String fiscalCode) {
-//     this.contributions = 500.0;
-//     this.fiscalCode = fiscalCode;
-//     this.name = name;
-//     this.surname = surname;
-//     this.email = email;
-//     this.NextVoucherID = 1;
-// }
-
 public String getfiscalCode (){
     return this.fiscalCode;
 }
