@@ -15,7 +15,7 @@ import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbException;
 
 public class ProtocolHandler implements Runnable {
-    private final Database database; // Database instance
+    private final DatabaseHandler database; // Database instance
     private final Socket clientSocket; // Client socket for communication
     private final PrintWriter out; // Output stream to send responses to the client
     private final BufferedReader in; // Input stream to read requests from the client
@@ -28,7 +28,7 @@ public class ProtocolHandler implements Runnable {
      * @param clientSocket The socket connected to the client.
      * @throws IOException If an I/O error occurs when creating input/output streams.
      */
-    public ProtocolHandler(Database database, Socket clientSocket) throws IOException {
+    public ProtocolHandler(DatabaseHandler database, Socket clientSocket) throws IOException {
         this.database = database;
         this.clientSocket = clientSocket;
         this.out = new PrintWriter(clientSocket.getOutputStream(), true);

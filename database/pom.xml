@@ -17,13 +17,13 @@
         <dependency>
             <groupId>jakarta.json.bind</groupId>
             <artifactId>jakarta.json.bind-api</artifactId>
-            <version>3.0.1</version> <!-- Aggiorna alla versione 3.0.1 -->
+            <version>3.0.1</version> 
         </dependency>
-        <!-- Yasson: Implementazione di JSON-B -->
+        <!-- Yasson: JSON-B implementation -->
         <dependency>
             <groupId>org.eclipse</groupId>
             <artifactId>yasson</artifactId>
-            <version>3.0.2</version> <!-- Usa l'ultima versione disponibile -->
+            <version>3.0.2</version>
         </dependency>
         <!-- Jakarta JSON API -->
         <dependency>
@@ -31,7 +31,7 @@
             <artifactId>jakarta.json-api</artifactId>
             <version>2.0.0</version>
         </dependency>
-        <!-- Implementazione di Jakarta JSON -->
+        <!-- Jakarta JSON implementation -->
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.json</artifactId>
@@ -41,7 +41,7 @@
 
     <build>
         <plugins>
-            <!-- Maven Exec Plugin: serve per eseguire il progetto direttamente da Maven -->
+            <!-- Maven Exec Plugin: to run directly from Maven -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>

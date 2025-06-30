@@ -54,7 +54,7 @@ public class Main {
         public void run() {
             try {
                 // Create a ProtocolHandler instance
-                ProtocolHandler protocolHandler = new ProtocolHandler(Database.getInstance(), client);
+                ProtocolHandler protocolHandler = new ProtocolHandler(DatabaseHandler.getInstance(), client);
 
                 // Execute the ProtocolHandler to handle the request
                 protocolHandler.run();
@@ -77,7 +77,7 @@ public class Main {
      * @throws IOException if an I/O error occurs during server startup.
      */
     public static void main(String[] args) throws IOException {
-        Database.getInstance(); // Initialize the database
+        DatabaseHandler.getInstance(); // Initialize the database
         System.out.println("Starting server...");
         startServer(); // Start the server
     }
