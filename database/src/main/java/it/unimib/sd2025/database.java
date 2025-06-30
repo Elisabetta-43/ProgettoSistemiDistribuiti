@@ -3,7 +3,6 @@ package it.unimib.sd2025;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,25 +42,25 @@ public class Database {
 
         try {
             // Load users
-            String usersJson = new String(Files.readAllBytes(Paths.get("user.json")));
-            List<Map<String, Object>> users = jsonb.fromJson(usersJson, new ArrayList<Map<String, Object>>() {}.getClass().getGenericSuperclass());
+            String usersJson = new String(Files.readAllBytes(Paths.get("C:/Users/e.locatelli43/Documents/GitHub/ProgettoSD/database/databaseData/user.json")));
+            Map<String, Object> usersData = jsonb.fromJson(usersJson, Map.class); // Deserialize as a Map
+            List<Map<String, Object>> users = (List<Map<String, Object>>) usersData.get("user"); // Extract the "user" array
             for (Map<String, Object> user : users) {
-                // Assuming "CF" is the key for user data
-                String cf = (String) user.get("CF"); 
+                String cf = (String) user.get("fiscalCode"); 
                 dati.put("User:" + cf, jsonb.toJson(user));
             }
 
             // Load vouchers
-            String vouchersJson = new String(Files.readAllBytes(Paths.get("voucher.json")));
-            List<Map<String, Object>> vouchers = jsonb.fromJson(vouchersJson, new ArrayList<Map<String, Object>>() {}.getClass().getGenericSuperclass());
+            String vouchersJson = new String(Files.readAllBytes(Paths.get("C:/Users/e.locatelli43/Documents/GitHub/ProgettoSD/database/databaseData/voucher.json")));
+            Map<String, Object> vouchersData = jsonb.fromJson(vouchersJson, Map.class); // Deserialize as a Map
+            List<Map<String, Object>> vouchers = (List<Map<String, Object>>) vouchersData.get("voucher"); // Extract the "voucher" array
             for (Map<String, Object> voucher : vouchers) {
-                // Assuming "IdVoucher" is the key for voucher data
-                String identifier = (String) voucher.get("IdVoucher"); 
+                String identifier = String.valueOf(voucher.get("idVoucher")); 
                 dati.put("Voucher:" + identifier, jsonb.toJson(voucher));
             }
 
             // Load global state
-            String globalStateJson = new String(Files.readAllBytes(Paths.get("database.json")));
+            String globalStateJson = new String(Files.readAllBytes(Paths.get("C:/Users/e.locatelli43/Documents/GitHub/ProgettoSD/database/databaseData/database.json")));
             Map<String, Object> globalState = jsonb.fromJson(globalStateJson, Map.class);
             dati.put("GlobalState", jsonb.toJson(globalState));
 
@@ -130,7 +129,7 @@ public class Database {
             String value = parts[1].trim();
             // Check if the key exists in the database
             if (!dati.containsKey(key)) {
-            return false; // Condition not met
+                return false; // Condition not met
            }                
             return dati.get(key).equals(value); // Match the value
        } catch (Exception e) {

@@ -1,9 +1,5 @@
 it\unimib\sd2025\Database.class
 it\unimib\sd2025\Main.class
-it\unimib\sd2025\Database$1.class
-it\unimib\sd2025\models\User.class
 it\unimib\sd2025\ProtocolHandler.class
 it\unimib\sd2025\Main$Handler.class
 it\unimib\sd2025\models\MessageDB.class
-it\unimib\sd2025\Database$2.class
-it\unimib\sd2025\models\Voucher.class
