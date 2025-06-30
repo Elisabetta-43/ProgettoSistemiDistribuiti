@@ -9,96 +9,30 @@ import jakarta.json.bind.JsonbBuilder;
 
 public class DBcomunication {
 
+    // funzione usata per la creazione delle query
+    public String MakeQuery(String op, String type, String ID, String[] keys, Object[] values, String conditions){
+        Map Query = new HashMap <String, String>(), parameter;
+        Jsonb jsonb = JsonbBuilder.create();
+        boolean f;
+        Query.put("op", op);
+        Query.put("type", type);
+        Query.put("ID", ID);
+        if (keys != null && values != null) {
+            parameter = new HashMap <String, Object>();
+                for (int i = 0; i < values.length; i++) {
+                    parameter.put(keys[i], values[i]);
+                }
+            Query.put("parameter", jsonb.toJson(parameter));
+        }else
+            Query.put("parameter", null);
+        Query.put("conditions", conditions);   
+        return jsonb.toJson(Query);
+    }
+
+    public MessageDB SendQuery(String query){
+        return TCPconnection.sendMessage(query);
+    }
     
-    public static MessageDB CreateNewUser(String user){
-        Map Query = new HashMap <String, String>();
-        Jsonb jsonb = JsonbBuilder.create();
-        String QueryString;
 
-        Query.put("op", "CREATE");
-        Query.put("type", "User");
-        Query.put("ID", "CF");
-        Query.put("parameter", user);
-        //Query.put("conditions", null);
-        QueryString = jsonb.toJson(Query);
 
-        return TCPconnection.sendMessage(QueryString);
-    }
-
-    public static MessageDB CreateNewVoucher(String voucher){
-        Map Query = new HashMap <String, String>();
-        Jsonb jsonb = JsonbBuilder.create();
-        String QueryString;
-
-        Query.put("op", "CREATE");
-        Query.put("type", "Voucher");
-        Query.put("ID", "Identificatore");
-        Query.put("parameter", voucher);
-        //Query.put("conditions", null);
-        QueryString = jsonb.toJson(Query);
-
-        return TCPconnection.sendMessage(QueryString);
-    }
-
-    public static MessageDB GetParam(String parameter, String ID, String type){
-        Map Query = new HashMap <String, String>();
-        Jsonb jsonb = JsonbBuilder.create();
-        String QueryString;
-
-        Query.put("op", "RETRIEVE");
-        Query.put("type", type);
-        Query.put("parameter", parameter);
-        if (type.equals("User"))
-            Query.put("condition", "CF="+ ID);
-        else
-            Query.put("condition", "Identificatore="+ ID);
-        QueryString = jsonb.toJson(Query);
-
-        return TCPconnection.sendMessage(QueryString);  
-    }
-
-    public static MessageDB SetParam(String parameter, String ID, String type){
-        Map Query = new HashMap <String, String>();
-        Jsonb jsonb = JsonbBuilder.create();
-        String QueryString;
-
-        Query.put("op", "UPDATE");
-        Query.put("type", type);
-        Query.put("parameter", parameter);
-        if (type.equals("User"))
-            Query.put("condition", "CF,=,"+ ID);
-        else
-            Query.put("condition", "Identificatore="+ ID);
-        QueryString = jsonb.toJson(Query);
-
-        return TCPconnection.sendMessage(QueryString);  
-    }
-
-    public static MessageDB DeleteVoucher(String ID){
-        Map Query = new HashMap <String, String>();
-        Jsonb jsonb = JsonbBuilder.create();
-        String QueryString;
-        
-        Query.put("op", "DELETE");
-        Query.put("type", "Voucher");
-        Query.put("parameter", null);
-        Query.put("condition", "Identificatore="+ ID);
-        QueryString = jsonb.toJson(Query);
-
-        return TCPconnection.sendMessage(QueryString);  
-    }
-
-    public static MessageDB GetVoucherList(String CF, String VoucherParam){
-        Map Query = new HashMap <String, String>();
-        Jsonb jsonb = JsonbBuilder.create();
-        String QueryString;
-
-        Query.put("op", "RETRIEVE");
-        Query.put("type", "Voucher");
-        Query.put("parameter", VoucherParam);
-        Query.put("condition", "CF_utente="+ CF);
-        QueryString = jsonb.toJson(Query);
-
-        return TCPconnection.sendMessage(QueryString);  
-    }
 }

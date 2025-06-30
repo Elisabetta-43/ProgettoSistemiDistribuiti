@@ -12,7 +12,7 @@ import jakarta.ws.rs.ext.Provider;
  * eccezione Java a e risposte HTTP.
  * 
  * JsonParsingException viene chiamata quando c'è un errore di deserializzazione JSON,
- * semplicemente invece di restituire lo stato 500 restituisce 400.
+ * semplicemente invece di restituire lo status 500 restituisce 400.
  * 
  * L'annotazione "@Provider" serve a far registrare la mappatura in automatico in JAX-RS.
  */

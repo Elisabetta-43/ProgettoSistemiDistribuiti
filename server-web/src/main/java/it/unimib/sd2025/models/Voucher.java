@@ -2,73 +2,73 @@ package it.unimib.sd2025.models;
 
 public class Voucher { 
     
-    String Identificarore;
-    Double importo;
-    String tipologia;
-    Boolean stato;
-    String DataCreazione;
-    String DataConsumo;
-    String CF_utente;
+    String idVoucher;
+    Double amount;
+    String category;
+    Boolean status; // true se attivo, false altrimenti
+    String creationDate;
+    String expirationDate;
+    String userId;
 
-    // public Voucher (int NextVoucherID, Double importo, String tipologia, String DataCreazione, String CF_utente){
+    // public Voucher (int NextVoucherID, Double amount, String category, String creationDate, String userId){
 
-    //     this.Identificarore = CF_utente + "/" + NextVoucherID;
+    //     this.idVoucher = userId + "/" + NextVoucherID;
     // }
 
-    public String getIdentificarore() {
-		return Identificarore;
+    public String getidVoucher() {
+		return idVoucher;
 	}
 
-	public void setIdentificarore(String identificarore) {
-		Identificarore = identificarore;
+	public void setidVoucher(String idVoucher) {
+		this.idVoucher = idVoucher;
 	}
 
-	public Double getImporto() {
-		return importo;
+	public Double getamount() {
+		return amount;
 	}
 
-	public void setImporto(Double importo) {
-		this.importo = importo;
+	public void setamount(Double amount) {
+		this.amount = amount;
 	}
 
-	public String getTipologia() {
-		return tipologia;
+	public String getcategory() {
+		return category;
 	}
 
-	public void setTipologia(String tipologia) {
-		this.tipologia = tipologia;
+	public void setcategory(String category) {
+		this.category = category;
 	}
 
-	public Boolean getStato() {
-		return stato;
+	public Boolean getstatus() {
+		return status;
 	}
 
-	public void setStato(Boolean stato) {
-		this.stato = stato;
+	public void setstatus(Boolean status) {
+		this.status = status;
 	}
 
-	public String getDataCreazione() {
-		return DataCreazione;
+	public String getcreationDate() {
+		return creationDate;
 	}
 
-	public void setDataCreazione(String dataCreazione) {
-		DataCreazione = dataCreazione;
+	public void setcreationDate(String creationDate) {
+		this.creationDate = creationDate;
 	}
 
-	public String getDataConsumo() {
-		return DataConsumo;
+	public String getexpirationDate() {
+		return expirationDate;
 	}
 
-	public void setDataConsumo(String dataConsumo) {
-		DataConsumo = dataConsumo;
+	public void setexpirationDate(String expirationDate) {
+		this.expirationDate = expirationDate;
 	}
 
-	public String getCF_utente() {
-		return CF_utente;
+	public String getuserId() {
+		return userId;
 	}
 
-	public void setCF_utente(String cF_utente) {
-		CF_utente = cF_utente;
+	public void setuserId(String userId) {
+		this.userId = userId;
 	}
 
 }

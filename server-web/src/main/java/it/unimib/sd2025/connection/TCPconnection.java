@@ -25,7 +25,7 @@ public class TCPconnection {
             result = in.readLine();
             return jsonb.fromJson(result, MessageDB.class);
         } catch (IOException e) {
-            return new MessageDB("401", "I/O exception", null);
+            return new MessageDB("500", "I/O exception", null);
         }
     }
 

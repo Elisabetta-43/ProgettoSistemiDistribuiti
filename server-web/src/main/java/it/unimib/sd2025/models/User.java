@@ -2,67 +2,77 @@ package it.unimib.sd2025.models;
 
 public class User { 
 
-private Double contributo;
-private String CF; 
-private String nome;
-private String cognome;
-private String email;
+private Double contributions;
+private String fiscalCode; 
+private String name;
+private String surname;
+private String Email;
 private int NextVoucherID;
+private boolean Admin;
 
-public User (String nome, String cognome, String email, String CF) {
-    this.contributo = 500.0;
-    this.CF = CF;
-    this.nome = nome;
-    this.cognome = cognome;
-    this.email = email;
-    this.NextVoucherID = 1;
+// public User (String name, String surname, String email, String fiscalCode) {
+//     this.contributions = 500.0;
+//     this.fiscalCode = fiscalCode;
+//     this.name = name;
+//     this.surname = surname;
+//     this.email = email;
+//     this.NextVoucherID = 1;
+// }
+
+public String getfiscalCode (){
+    return this.fiscalCode;
 }
 
-public String getCF (){
-    return this.CF;
+public String getname (){
+    return this.name;
 }
 
-public String getNome (){
-    return this.nome;
-}
-
-public String getCognome (){
-    return this.cognome;
+public String getsurname (){
+    return this.surname;
 }
 
 public String getEmail (){
-    return this.email;
+    return this.Email;
 }
 
-public Double getContributo(){
-    return this.contributo;
+public Double getcontributions(){
+    return this.contributions;
 }
 
 public int getNextVoucherID(){
     return this.NextVoucherID;
 }
 
-public void setContributo(Double contributo) {
-	this.contributo = contributo;
+public boolean getAdmin(){
+    return this.Admin;
 }
 
-public void setCF(String cF) {
-	this.CF = cF;
+public void setcontributions(Double contributions) {
+	this.contributions = contributions;
 }
 
-public void setNome(String nome) {
-	this.nome = nome;
+public void setfiscalCode(String fiscalCode) {
+	this.fiscalCode = fiscalCode;
 }
 
-public void setCognome(String cognome) {
-	this.cognome = cognome;
+public void setname(String name) {
+	this.name = name;
+}
+
+public void setsurname(String surname) {
+	this.surname = surname;
 }
 
 public void setEmail(String email) {
-	this.email = email;
+	this.Email = email;
 }
 
 public void setNextVoucherID(int nextVoucherID) {
 	this.NextVoucherID = nextVoucherID;
 }
+
+public void setAdmin(boolean admin){
+    this.Admin = admin;
+}
+
 }
