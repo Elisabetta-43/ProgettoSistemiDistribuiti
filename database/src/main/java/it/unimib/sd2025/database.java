@@ -55,8 +55,8 @@ public class Database {
             String vouchersJson = new String(Files.readAllBytes(Paths.get("voucher.json")));
             List<Map<String, Object>> vouchers = jsonb.fromJson(vouchersJson, new ArrayList<Map<String, Object>>() {}.getClass().getGenericSuperclass());
             for (Map<String, Object> voucher : vouchers) {
-                // Assuming "Identificarore" is the key for voucher data
-                String identifier = (String) voucher.get("Identificarore"); 
+                // Assuming "IdVoucher" is the key for voucher data
+                String identifier = (String) voucher.get("IdVoucher"); 
                 dati.put("Voucher:" + identifier, jsonb.toJson(voucher));
             }
 
