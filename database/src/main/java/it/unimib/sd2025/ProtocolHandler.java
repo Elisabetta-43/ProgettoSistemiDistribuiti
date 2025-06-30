@@ -101,7 +101,7 @@ public class ProtocolHandler implements Runnable {
      * @return true if the query is valid, false otherwise.
      */
     private boolean validateQuery(Map<String, String> query) {
-        return query.containsKey("op") && query.containsKey("type");
+        return query.containsKey("op");
     }
 
     private void logError(String message, Exception e) {
