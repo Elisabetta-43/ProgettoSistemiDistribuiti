@@ -21,19 +21,20 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Rappresenta la risorsa "example" in "http://localhost:8080/example".
+ * Rapresent the resource "example" in "http://localhost:8080/example".
  */
 @Path("/user")
 public class UserResource {
 
     private static DBcomunication conn = new DBcomunication();
-    // Inizializzazione statica.
+    // Static block to initialize the database connection or any other static resources.
+    // This block is executed once when the class is loaded.
     static {
         // ...
     }
 
     /**
-     * Implementazione di GET "/example".
+     * GET "/example" implementation.
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -126,7 +127,7 @@ public class UserResource {
         String Query;
         MessageDB message;
  
-        String cond = "userId="+id; // da inserire userId = id
+        String cond = "userId="+id; 
         Query = conn.MakeQuery("RETRIEVE", null, null, null, cond);
         message = conn.SendQuery(Query);
 

@@ -9,7 +9,7 @@ import jakarta.json.bind.JsonbBuilder;
 
 public class DBcomunication {
 
-    // funzione usata per la creazione delle query
+    // Method to create a query string for the database operations.
     public String MakeQuery(String op, String ID, String[] keys, Object[] values, String conditions){
         Map Query = new HashMap <String, String>(), parameter;
         Jsonb jsonb = JsonbBuilder.create();
