@@ -23,7 +23,7 @@ Each request contains the following fields:
 | `type`      | String | Type of record to manage                     | `"User"`                                |
 | `ID`        | String | Record identifier                            | `"RSSMRA80A01H501U"`                    |
 | `parameter` | Object | Parameters for the operation (optional)      | `{"name": "Mario", "surname": "Rossi"}` |
-| `condition` | String | Condition to filter records (optional)       | `"CF_utente=RSSMRA80A01H501U"`          |
+| `condition` | String | Condition to filter records (optional)       | `"fiscalCode=RSSMRA80A01H501U"`          |
 
 **Example Request:**
 ```json
@@ -115,7 +115,7 @@ Ogni richiesta contiene i seguenti campi:
 | `type`      | String | Tipo di record da gestire                    | `"User"`                                |
 | `ID`        | String | Identificativo del record                    | `"RSSMRA80A01H501U"`                    |
 | `parameter` | Object | Parametri per l'operazione (opzionale)       | `{"name": "Mario", "surname": "Rossi"}` |
-| `condition` | String | Condizione per filtrare i record (opzionale) | `"CF_utente=RSSMRA80A01H501U"`                        |
+| `condition` | String | Condizione per filtrare i record (opzionale) | `"fiscalCode=RSSMRA80A01H501U"`          |
 
 **Esempio di Richiesta:**
 ```json
