@@ -7,16 +7,18 @@
             "category": "cinema",
             "status": "true",
             "creationDate": "2023-10-01",
-            "expirationDate": null
+            "expirationDate": null,
+            "type": "voucher"
         },
         {
             "idVoucher": 2,
             "userId": "RSSMRA80A01H501U",
             "amount": 60,
-            "type": "books",
+            "category": "books",
             "status": "false",
             "creationDate": "2023-09-15",
-            "expirationDate": "2023-09-20"
+            "expirationDate": "2023-09-20",
+            "type": "voucher"
         }
     ]
 }

@@ -1,26 +1,17 @@
 package it.unimib.sd2025.resources;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.annotation.processing.Generated;
 
 import it.unimib.sd2025.models.DBcomunication;
 import it.unimib.sd2025.models.MessageDB;
 import it.unimib.sd2025.models.User;
 import it.unimib.sd2025.models.Voucher;
-import jakarta.json.JsonException;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
-import jakarta.json.bind.JsonbException;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -50,7 +41,7 @@ public class UserResource {
         String Query;
         MessageDB message;
 
-        Query = conn.MakeQuery("RETRIEVE", "User", id, null, null, null);
+        Query = conn.MakeQuery("RETRIEVE", id, null, null, null);
         message = conn.SendQuery(Query);
         if (message.getStatusCode().equals("500")) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
@@ -71,13 +62,13 @@ public class UserResource {
         user.setcontributions(500.0);
         user.setNextVoucherID(1);
 
-        String[] keys = { "contributions", "fiscalCode", "name", "surname", "email", "NextVoucherID", "admin" };
+        String[] keys = { "contributions", "fiscalCode", "name", "surname", "email", "NextVoucherID", "admin", "type" };
         Object[] values = { user.getcontributions(), user.getfiscalCode(), user.getname(), user.getsurname(),
-                user.getEmail(), user.getNextVoucherID(), user.getAdmin() }; 
-        StringUser = conn.MakeQuery("CREATE", "User", "fiscalCode", keys, values, null);
+                user.getEmail(), user.getNextVoucherID(), user.getAdmin(), "User" }; 
+        StringUser = conn.MakeQuery("CREATE", "fiscalCode", keys, values, null);
         MessageDB message = conn.SendQuery(StringUser);
 
-        if (message.getStatusCode().equals("500")) {
+        if (message.getStatusCode().equals("500")) { //
             return Response.status(Status.INTERNAL_SERVER_ERROR)
                     .entity(message.getMessage()).build();
         } else if (message.getStatusCode().equals("400")) {
@@ -98,7 +89,7 @@ public class UserResource {
         Double consumedTotal = 0.0, unusedTotal = 0.0, total = 0.0;
         Voucher voucher;
 
-        Query = conn.MakeQuery("RETRIEVE", "Voucher", null, null, null, "userId=" + id);
+        Query = conn.MakeQuery("RETRIEVE", null, null, null, "userId=" + id);
         MessageDB message = conn.SendQuery(Query);
 
         if (message.getStatusCode().equals("500")) {
@@ -136,7 +127,7 @@ public class UserResource {
         MessageDB message;
  
         String cond = "userId="+id; // da inserire userId = id
-        Query = conn.MakeQuery("RETRIEVE", "Voucher", null, null, null, cond);
+        Query = conn.MakeQuery("RETRIEVE", null, null, null, cond);
         message = conn.SendQuery(Query);
 
         if (message.getStatusCode().equals("404")) {
@@ -162,10 +153,10 @@ public class UserResource {
         Double totale = 0.0, totaleSpeso = 0.0, totalerimasto = 0.0;
         int totalebuoni = 0, buoniConsumati = 0, buoniValidi = 0;
 
-        Query1 = conn.MakeQuery("RETRIEVE", "Voucher", null, null, null, "type=Voucher");
+        Query1 = conn.MakeQuery("RETRIEVE", null, null, null, "type=Voucher");
         message1 = conn.SendQuery(Query1);
 
-        Query2 = conn.MakeQuery("RETRIEVE", "User", null, null, null, "type=User");
+        Query2 = conn.MakeQuery("RETRIEVE", null, null, null, "type=User");
         message2 = conn.SendQuery(Query2);
         
         if (message1.getStatusCode().equals("404") || message2.getStatusCode().equals("404")) {

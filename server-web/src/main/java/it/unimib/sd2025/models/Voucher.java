@@ -2,18 +2,14 @@ package it.unimib.sd2025.models;
 
 public class Voucher { 
     
-    String idVoucher;
-    Double amount;
-    String category;
-    Boolean status; // true se attivo, false altrimenti
-    String creationDate;
-    String expirationDate;
-    String userId;
-
-    // public Voucher (int NextVoucherID, Double amount, String category, String creationDate, String userId){
-
-    //     this.idVoucher = userId + "/" + NextVoucherID;
-    // }
+    private String idVoucher;
+    private Double amount;
+    private String category;
+    private Boolean status; // true if used, false if not used
+    private String creationDate;
+    private String expirationDate;
+    private String userId;
+	private String type; 
 
     public String getidVoucher() {
 		return idVoucher;
@@ -71,5 +67,12 @@ public class Voucher {
 		this.userId = userId;
 	}
 
+	public String gettype(){
+		return this.type;
+	}
+	
+	public void settype(String type){
+		this.type = type;
+	}
 }
 

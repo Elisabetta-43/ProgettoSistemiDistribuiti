@@ -20,16 +20,14 @@ Each request contains the following fields:
 |-------------|--------|----------------------------------------------|-----------------------------------------|
 | `op`        | String | Operation to be performed                    | `"CREATE"`                              |
 |             |        | (`CREATE`, `RETRIEVE`, `UPDATE`, `DELETE`)   |                                         |
-| `type`      | String | Type of record to manage                     | `"User"`                                |
 | `ID`        | String | Record identifier                            | `"RSSMRA80A01H501U"`                    |
 | `parameter` | Object | Parameters for the operation (optional)      | `{"name": "Mario", "surname": "Rossi"}` |
-| `condition` | String | Condition to filter records (optional)       | `"fiscalCode=RSSMRA80A01H501U"`          |
+| `condition` | String | Condition to filter records (optional)       | `"fiscalCode=RSSMRA80A01H501U"`         |
 
 **Example Request:**
 ```json
 {
     "op": "CREATE",
-    "type": "User",
     "ID": "RSSMRA80A01H501U",
     "parameter": {
         "name": "Mario",
@@ -63,25 +61,25 @@ Each response contains the following fields:
 }
 ```
 ### 2.3 Supported Commands
-| Command  | Parameters                 | Description                          | 
-|----------|----------------------------|--------------------------------------|
-| CREATE   | `type`, `ID`, `parameter`  | Creates a new record in the database | 
-| RETRIEVE | `type`, `ID`, `condition`  | Retrieves a record from the database | 
-| UPDATE   | `type`, `ID`, `parameter`  | Updates a record in the database     |
-| DELETE   | `type`, `ID`, `condition`  | Deletes a record from the database   | 
+| Command  | Parameters         | Description                          | 
+|----------|--------------------|--------------------------------------|
+| CREATE   | `ID`, `parameter`  | Creates a new record in the database | 
+| RETRIEVE | `ID`, `condition`  | Retrieves a record from the database | 
+| UPDATE   | `ID`, `parameter`  | Updates a record in the database     |
+| DELETE   | `ID`, `condition`  | Deletes a record from the database   | 
 
 
 ## Example Request "CREATE":
-`{"op": "CREATE", "type": "User", "ID": "RSSMRA80A01H501U", "parameter": {...}}`
+`{"op": "CREATE", "ID": "RSSMRA80A01H501U", "parameter": {...}}`
 
 ## Example Request "RETRIEVE":
-`{"op": "RETRIEVE", "type": "User", "ID": "RSSMRA80A01H501U"}`
+`{"op": "RETRIEVE", "ID": "RSSMRA80A01H501U"}`
 
 ## Example Request "UPDATE":
-`{"op": "UPDATE", "type": "User", "ID": "RSSMRA80A01H501U", "parameter": {...}}`
+`{"op": "UPDATE", "ID": "RSSMRA80A01H501U", "parameter": {...}}`
 
 ## Example Request "DELETE":
-`{"op": "DELETE", "type": "User", "ID": "RSSMRA80A01H501U"}`
+`{"op": "DELETE", "ID": "RSSMRA80A01H501U"}`
 
 ---
 
@@ -112,16 +110,14 @@ Ogni richiesta contiene i seguenti campi:
 |-------------|--------|----------------------------------------------|-----------------------------------------|
 | `op`        | String | Operazione da eseguire                       | `"CREATE"`                              |
 |             |        | (`CREATE`, `RETRIEVE`, `UPDATE`, `DELETE`)   |                                         |
-| `type`      | String | Tipo di record da gestire                    | `"User"`                                |
 | `ID`        | String | Identificativo del record                    | `"RSSMRA80A01H501U"`                    |
 | `parameter` | Object | Parametri per l'operazione (opzionale)       | `{"name": "Mario", "surname": "Rossi"}` |
-| `condition` | String | Condizione per filtrare i record (opzionale) | `"fiscalCode=RSSMRA80A01H501U"`          |
+| `condition` | String | Condizione per filtrare i record (opzionale) | `"fiscalCode=RSSMRA80A01H501U"`         |
 
 **Esempio di Richiesta:**
 ```json
 {
     "op": "CREATE",
-    "type": "User",
     "ID": "RSSMRA80A01H501U",
     "parameter": {
         "name": "Mario",
@@ -150,25 +146,25 @@ Ogni risposta contiene i seguenti campi:
 ```
 
 ### 2.3 Comandi Supportati
-| Comando  | Parametri                  | Descrizione                       | 
-|----------|----------------------------|-----------------------------------|
-| CREATE   | `type`, `ID`, `parameter`  | Crea un nuovo record nel database | 
-| RETRIEVE | `type`, `ID`, `condition`  | Recupera un record dal database   | 
-| UPDATE   | `type`, `ID`, `parameter`  | Aggiorna un record nel database   |
-| DELETE   | `type`, `ID`, `condition`  | Elimina un record dal database    | 
+| Comando  | Parametri           | Descrizione                       | 
+|----------|---------------------|-----------------------------------|
+| CREATE   |  `ID`, `parameter`  | Crea un nuovo record nel database | 
+| RETRIEVE |  `ID`, `condition`  | Recupera un record dal database   | 
+| UPDATE   |  `ID`, `parameter`  | Aggiorna un record nel database   |
+| DELETE   |  `ID`, `condition`  | Elimina un record dal database    | 
 
 
 ## Esempio Richiesta "CREATE":
-`{"op": "CREATE", "type": "User", "ID": "RSSMRA80A01H501U", "parameter": {...}}`
+`{"op": "CREATE", "ID": "RSSMRA80A01H501U", "parameter": {...}}`
 
 ## Esempio Richiesta "RETRIEVE":
-`{"op": "RETRIEVE", "type": "User", "ID": "RSSMRA80A01H501U"}`
+`{"op": "RETRIEVE", "ID": "RSSMRA80A01H501U"}`
 
 ## Esempio Richiesta "UPDATE":
-`{"op": "UPDATE", "type": "User", "ID": "RSSMRA80A01H501U", "parameter": {...}}`
+`{"op": "UPDATE", "ID": "RSSMRA80A01H501U", "parameter": {...}}`
 
 ## Esempio Richiesta "DELETE":
-`{"op": "DELETE", "type": "User", "ID": "RSSMRA80A01H501U"}`
+`{"op": "DELETE", "ID": "RSSMRA80A01H501U"}`
 
 ---
 

@@ -1,21 +1,13 @@
 package it.unimib.sd2025.resources;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
-import javax.print.DocFlavor.STRING;
-
-import it.unimib.sd2025.JsonParsingException;
 import it.unimib.sd2025.models.DBcomunication;
 import it.unimib.sd2025.models.MessageDB;
 import it.unimib.sd2025.models.User;
-import jakarta.json.JsonException;
+import it.unimib.sd2025.models.Voucher;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
-import jakarta.json.bind.JsonbException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -28,35 +20,29 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import it.unimib.sd2025.models.DBcomunication;
-import it.unimib.sd2025.models.Voucher;
 
 /**
- * Rappresenta la risorsa "example" in "http://localhost:8080/example".
+ * Rapresent the resource "example" in "http://localhost:8080/example".
  */
 @Path("/voucher")
 public class VoucherResource {
-    // Attributi privati statici...
+    // Private static attributes
     private static DBcomunication conn = new DBcomunication();
-    // Inizializzazione statica.
+    // Static block to initialize the connection
     static {
         // ...
     }
 
-    /**
-     * da rivedere la creazione del voucher, il metodo è un po tutto sbagliato,
-     * l'avevo fatto di sera tardi
-     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response CreateNewVoucher(Voucher voucher, @QueryParam("fiscalCode") String fiscalCode) { // sincronized
+    public Response CreateNewVoucher(Voucher voucher, @QueryParam("fiscalCode") String fiscalCode) { // synchronized
         String QueryRetrieve, QueryUpdate, QueryCreate, identifier;
         MessageDB message1, message2, message3;
         Jsonb jsonb = JsonbBuilder.create();
         User user;
         // prendo oggetto utente
-        QueryRetrieve = conn.MakeQuery("RETRIEVE", "User", fiscalCode, null, null, null);
+        QueryRetrieve = conn.MakeQuery("RETRIEVE", fiscalCode, null, null, null);
         message1 = conn.SendQuery(QueryRetrieve);
 
         if (message1.getStatusCode().equals("500"))
@@ -73,10 +59,10 @@ public class VoucherResource {
             return Response.status(Status.BAD_REQUEST)
                     .entity("amount value must be lower than " + user.getcontributions())
                     .build();
-        // aggiorno valori utente, contributions e ID voucher
+        // Update values in user
         String[] updateKeys = { "contributions, NextVoucherID" };
         Object[] updateValues = { user.getcontributions() - voucher.getamount(), user.getNextVoucherID() + 1 };
-        QueryUpdate = conn.MakeQuery("UPDATE", "User", fiscalCode, updateKeys, updateValues, null);
+        QueryUpdate = conn.MakeQuery("UPDATE", fiscalCode, updateKeys, updateValues, null);
         message2 = conn.SendQuery(QueryUpdate);
 
         if (message2.getStatusCode().equals("500"))
@@ -86,13 +72,13 @@ public class VoucherResource {
             return Response.status(Status.NOT_FOUND).build();
         if (message2.getStatusCode().equals("400"))
             return Response.status(Status.BAD_REQUEST).entity(message2.getMessage()).build();
-        // creazione voucher
+        // voucher creation
         identifier = fiscalCode + "/" + user.getNextVoucherID();
         String[] createkeys = { "Identificatore", "amount", "category", "status", "creationDate", "expirationDate",
-                "userId" };
+                "userId", "type" };
         Object[] createValues = { identifier, voucher.getamount(), voucher.getcategory(), voucher.getstatus(),
-                voucher.getcreationDate(), voucher.getexpirationDate(), fiscalCode };
-        QueryCreate = conn.MakeQuery("CREATE", "Voucher", identifier, createkeys, createValues, null);
+                voucher.getcreationDate(), voucher.getexpirationDate(), fiscalCode , "Voucher"};
+        QueryCreate = conn.MakeQuery("CREATE", identifier, createkeys, createValues, null);
         message3 = conn.SendQuery(QueryCreate);
 
         if (message3.getStatusCode().equals("500"))
@@ -118,7 +104,7 @@ public class VoucherResource {
         voucher.setexpirationDate(useDate.toString());
         String[] key = { "status", "expirationDate" };
         Object[] value = { voucher.getstatus(), voucher.getexpirationDate() };
-        Query = conn.MakeQuery("UPDATE", "Voucher", voucher.getidVoucher(), key, value, null);
+        Query = conn.MakeQuery("UPDATE", voucher.getidVoucher(), key, value, null);
         message = conn.SendQuery(Query);
 
         if (message.getStatusCode().equals("404")) {
@@ -146,7 +132,7 @@ public class VoucherResource {
 
         voucher.setcategory(category);
         String[] key = { "category" }, value = { voucher.getcategory() };
-        Query = conn.MakeQuery("UPDATE", "Voucher", voucher.getidVoucher(), key, value, null);
+        Query = conn.MakeQuery("UPDATE", voucher.getidVoucher(), key, value, null);
         message = conn.SendQuery(Query);
 
         if (message.getStatusCode().equals("404")) {
@@ -161,8 +147,8 @@ public class VoucherResource {
 
     }
 
-    @DELETE // cambiare in oggetto che riceve come json
-    @Consumes(MediaType.APPLICATION_JSON) // delete aggiornare il contributions
+    @DELETE // delete voucher
+    @Consumes(MediaType.APPLICATION_JSON) // consumes JSON
     public Response deleteVoucher(Voucher voucher, @QueryParam("contributions") Double contributions) {
         String QueryDelete, QueryUpdate;
         MessageDB message, messageUpdate;
@@ -170,7 +156,7 @@ public class VoucherResource {
             return Response.status(Status.BAD_REQUEST)
                     .entity("Voucher already expired").build();
         String [] key = {"contributions"}; Object [] value = {contributions + voucher.getamount()};
-        QueryUpdate = conn.MakeQuery("update", "User", voucher.getuserId(), key, value, null);
+        QueryUpdate = conn.MakeQuery("update", voucher.getuserId(), key, value, null);
         messageUpdate = conn.SendQuery(QueryUpdate);
         if (messageUpdate.getStatusCode().equals("404")) {
             return Response.status(Status.NOT_FOUND).build();
@@ -181,7 +167,7 @@ public class VoucherResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
                     .entity(messageUpdate.getMessage()).build();
 
-        QueryDelete = conn.MakeQuery("DELETE", "Voucher", voucher.getidVoucher(), null, null, null);
+        QueryDelete = conn.MakeQuery("DELETE", voucher.getidVoucher(), null, null, null);
         message = conn.SendQuery(QueryDelete);
 
         if (message.getStatusCode().equals("404")) {
@@ -202,7 +188,7 @@ public class VoucherResource {
         String Query;
         MessageDB message;
 
-        Query = conn.MakeQuery("RETRIEVE", "Voucher", id, null, null, null);
+        Query = conn.MakeQuery("RETRIEVE", id, null, null, null);
         message = conn.SendQuery(Query);
 
         if (message.getStatusCode().equals("404")) {

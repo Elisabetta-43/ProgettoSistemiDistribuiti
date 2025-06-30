@@ -7,7 +7,8 @@
             "Email": "mario.rossi@example.com",
             "contributions": 300,
             "NextVoucherID": 3,
-            "Admin": false
+            "Admin": false,
+            "Type": "user"
         },
         {
             "fiscalCode": "VRDLGU85B02H501U",
@@ -16,7 +17,8 @@
             "Email": "luigi.verdi@example.com",
             "contributions": 500,
             "NextVoucherID": 1,
-            "Admin": false
+            "Admin": false,
+            "Type": "user"
         },
         {
            "fiscalCode": "BNILNAE55C82601U",
@@ -25,7 +27,8 @@
             "Email": "anna.bianchi@example.com",
             "contributions": 0,
             "NextVoucherID": 1,
-            "Admin": true
+            "Admin": true,
+            "Type": "user"
         }
     ]
 }

@@ -69,8 +69,20 @@ public class DatabaseHandler {
     }
 
     // Method to create an object in the database
-    public boolean create(String type, String key, Map<String, Object> parameters) {
-       
+    public boolean create(String key, Map<String, Object> parameters) {
+       if (key == null || parameters == null) {
+            return false; // Missing type, key, or parameters
+        }
+
+        if (dati.containsKey(key)) {
+            return false; // Key already exists
+        }
+
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+             dati.put(entry.getKey(), entry.getValue());
+        }
+
+        return true; // Object created successfully
     }
 
     // Method to retrieve an object from the database
@@ -79,12 +91,22 @@ public class DatabaseHandler {
     }
 
     // Method to update an object in the database
-    public boolean update(String key, String value) {
-        if (key == null || value == null || !dati.containsKey(key)) {
-            return false; // Missing key or value, or key does not exist
+    public boolean update(String key, Map<String, Object> parameters)   {
+        if (key == null || !dati.containsKey(key) || parameters == null) {
+            return false; // Missing key or parameters,or key does not exist
         }
 
-        dati.put(key, value);
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            String paramKey = entry.getKey();
+            Object paramValue = entry.getValue();
+            if (paramValue == null) {
+                // If the value is null, remove the key from the map
+                dati.remove(paramKey);
+            } else {
+                // Otherwise, update the value
+                dati.put(paramKey, paramValue);
+            }
+        }
         return true;
     }
 

@@ -10,11 +10,10 @@ import jakarta.json.bind.JsonbBuilder;
 public class DBcomunication {
 
     // funzione usata per la creazione delle query
-    public String MakeQuery(String op, String type, String ID, String[] keys, Object[] values, String conditions){
+    public String MakeQuery(String op, String ID, String[] keys, Object[] values, String conditions){
         Map Query = new HashMap <String, String>(), parameter;
         Jsonb jsonb = JsonbBuilder.create();
         Query.put("op", op);
-        Query.put("type", type);
         Query.put("ID", ID);
         if (keys != null && values != null) {
             parameter = new HashMap <String, Object>();
