@@ -13,7 +13,6 @@ public class DBcomunication {
     public String MakeQuery(String op, String type, String ID, String[] keys, Object[] values, String conditions){
         Map Query = new HashMap <String, String>(), parameter;
         Jsonb jsonb = JsonbBuilder.create();
-        boolean f;
         Query.put("op", op);
         Query.put("type", type);
         Query.put("ID", ID);
