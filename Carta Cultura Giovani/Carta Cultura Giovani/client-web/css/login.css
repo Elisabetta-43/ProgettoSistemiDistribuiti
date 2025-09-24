@@ -1,0 +1,10 @@
+.frame h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+#loginMsg,
+#messaggio {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
